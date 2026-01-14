@@ -1,8 +1,11 @@
+"use client";
 import { ShoppingCart, User, UtensilsCrossed } from 'lucide-react';
-
+import { useRouter } from 'next/navigation';
 
 
 export default function Header() {
+  const router = useRouter();
+
   return (
     <header className="bg-white border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,7 +37,7 @@ export default function Header() {
               <ShoppingCart className="w-5 h-5 text-[#1F2421]" />
             </button>
             <button 
-
+              onClick={()=> router.push('/login')}
               className="flex items-center gap-2 bg-[#216869] hover:bg-[#1a5657] text-white px-5 py-2 rounded-lg transition-colors"
             >
               <User className="w-4 h-4" />
