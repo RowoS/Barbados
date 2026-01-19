@@ -12,11 +12,7 @@ export async function loginUser(email:string, password:string) {
 
 }
 
-export async function signUpUser(
-  email: string,
-  password: string,
-  username: string
-) {
+export async function signUpUser(email: string,password: string,username: string) {
   const supabase = createClient();
 
   return supabase.auth.signUp({
@@ -26,5 +22,22 @@ export async function signUpUser(
       emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
       data: { username },
     },
+  });
+}
+
+export async function forgetPassword(email: string) {
+  const supabase = createClient();
+
+  return supabase.auth.resetPasswordForEmail(email,
+    {redirectTo: `${window.location.origin}/update-password`}
+  );
+
+}
+
+export async function updatePassword(newPassword: string) {
+  const supabase = createClient();
+
+  return supabase.auth.updateUser({
+    password: newPassword,
   });
 }

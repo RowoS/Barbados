@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { loginUser } from "../lib/auth-actions";
+import { loginUser, forgetPassword } from "../lib/auth-actions";
 
 type FieldErrors = {
   email?: string;
@@ -60,13 +60,24 @@ export function useLoginForm() {
     }
   };
 
-  const handleForgotPassword = async () => {
+  const handleForgotPassword = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    setGlobalError(null);
+    setGlobalSuccess(null);
+
     if (!email.trim()) {
       setFieldErrors({ email: "Enter your email to reset password" });
       return;
     }
+    setIsLoading(true);
 
-    setGlobalSuccess("Password reset link sent. Check your email.");
+    try {
+      const { error } = await forgetPassword(email);
+      if (error) throw error;
+      setGlobalSuccess("Password reset link sent. Check your email.");
+    } catch (error: unknown) {
+      setGlobalError(error instanceof Error ? error.message : "Failed to send reset email");
+    }
   };
 
   const clearFieldError = (field: keyof FieldErrors) => {
