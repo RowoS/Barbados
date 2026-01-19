@@ -6,7 +6,7 @@ import {
   Settings 
 } from 'lucide-react';
 
-import { MenuItemConfig } from '@/types';
+import { MenuItemConfig } from '@/shared/types';
 
 export const PrimarySidebarItems: MenuItemConfig[] = [
   { id: 'Tasks', label: 'Tasks', icon: <ClipboardList size={20} />, href: "/tasks" },

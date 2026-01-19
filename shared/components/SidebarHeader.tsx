@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import LogoImage from '@/public/gardemic-logo.svg';
-import { SidebarHeaderProps } from '@/types';
+import { SidebarHeaderProps } from '@/shared/types';
 
 export const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isOpen }) => {
   return (

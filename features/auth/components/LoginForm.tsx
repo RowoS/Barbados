@@ -12,20 +12,19 @@ import { Mail, Lock, Eye, EyeOff, Smartphone } from "lucide-react";
 
 export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => {
   const {
-    email,
-    password,
-    rememberMe,
+    values,
+    setters,
     globalError,
     globalSuccess,
     fieldErrors,
     isLoading,
-    setEmail,
-    setPassword,
-    setRememberMe,
-    handleLogin,
+    submit,
     handleForgotPassword,
     clearFieldError,
   } = useLoginForm();
+
+  const { email, password, rememberMe } = values;
+  const { setEmail, setPassword, setRememberMe } = setters;
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -62,7 +61,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
           <div className="mb-4 p-3 text-sm text-green-700 bg-green-100 rounded-xl border border-green-200">
             {globalSuccess}
             <a
-              href="https://mail.google.com"
+              href="https://gmail.com"
               className="underline font-extrabold ml-1"
             >
               email.
@@ -70,35 +69,54 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
           </div>
         )}
 
-        {/* Card */}
+        {/* Form */}
         <div className="bg-white rounded-3xl shadow-xl p-8">
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              submit();
+            }}
+            className="space-y-6"
+          >
             {/* Email */}
             <InputField
               id="email"
               type="email"
               label="Email Address"
               value={email}
+              placeholder="Enter your email"
+              icon={<Mail className="w-5 h-5" />}
+              error={fieldErrors.email}
               onChange={(e) => {
                 setEmail(e.target.value);
                 clearFieldError("email");
               }}
-              error={fieldErrors.email}
-              placeholder="Enter your email"
             />
 
             {/* Password */}
             <InputField
               id="password"
+              type={showPassword ? "text" : "password"}
               label="Password"
               value={password}
+              placeholder="Enter your password"
+              icon={<Lock className="w-5 h-5" />}
+              error={fieldErrors.password}
               onChange={(e) => {
                 setPassword(e.target.value);
                 clearFieldError("password");
               }}
-              error={fieldErrors.password}
-              placeholder="Enter your password"
-
+              endAdornment={
+                <Button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="text-[#216869]"
+                >
+                  {showPassword ? (
+                    <EyeOff/>) : (<Eye/>)
+                  }
+                </Button>
+              }
             />
 
             {/* Remember / Forgot */}
@@ -107,7 +125,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
                 <Checkbox
                   id="remember"
                   checked={rememberMe}
-                  onCheckedChange={(v: boolean) => setRememberMe(v === true)}
+                  onCheckedChange={(v: boolean) =>
+                    setRememberMe(v === true)
+                  }
                 />
                 <Label htmlFor="remember" className="text-sm cursor-pointer">
                   Remember me
@@ -134,6 +154,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
             </Button>
           </form>
 
+          {/* Legal */}
+          <p className="text-center text-xs text-[#1F2421]/60 mt-4">
+            By logging in, you agree to FoodHub&apos;s{" "}
+            <a href="/privacy-policy" className="underline font-bold">
+              Privacy Policy
+            </a>{" "}
+            &{" "}
+            <a href="/terms" className="underline font-bold">
+              Terms of Use
+            </a>
+          </p>
+
           {/* Divider */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
@@ -146,25 +178,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
             </div>
           </div>
 
-          <GoogleButton nextRoute="/tasks" />
-
-          {/* Legal */}
-          <p className="text-center text-xs text-[#1F2421]/60 mt-4">
-            By logging in, you agree to FoodHub's{" "}
-            <a href="/privacy-policy" className="underline font-bold">
-              Privacy Policy
-            </a>{" "}
-            &{" "}
-            <a href="/terms" className="underline font-bold">
-              Terms of Use
-            </a>
-          </p>
+          <GoogleButton nextRoute="/dashboard" />
 
           {/* Signup */}
           <p className="mt-6 text-center text-sm text-[#1F2421]/70">
             Don&apos;t have an account?{" "}
             <a
-              href="/create-account"
+              href="/sign-up"
               className="text-[#216869] font-medium hover:underline"
             >
               Create one here

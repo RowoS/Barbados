@@ -9,7 +9,7 @@ interface GoogleButtonProps {
 }
 
 export default function GoogleButton({ 
-  nextRoute = "/tasks", 
+  nextRoute = "/dashboard", 
   text = "Google" 
 }: GoogleButtonProps) {
   
