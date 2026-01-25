@@ -1,58 +1,77 @@
 "use client";
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { updatePassword } from '../lib/auth-actions';
+import { useState } from "react";
+import { useRouter} from "next/navigation";
+import { updatePassword} from "../lib/auth-actions";
+import { useAsyncForm } from "./useAsyncForm";
+import { validatePassword } from "@/features/auth/lib/validators";
 
-export function useUpdatePasswordForm(){
-    const [password, setPassword] = React.useState("");
-    const [confirmPassword, setConfirmPassword] = React.useState("");
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [message, setMessage] = React.useState<string | null>(null);
-    const [error, setError] = React.useState<string | null>(null);
+type FieldErrors = {
+  password?: string;
+  confirmPassword?: string;
+};
 
-    const router = useRouter();
+export function useUpdatePasswordForm() {
+  const router = useRouter();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
-    const handleUpdatePassword = async (e:React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
-        setMessage(null);
+  const {
+    isLoading,
+    error: globalError,
+    success: globalSuccess,
+    setSuccess,
+    run,
+  } = useAsyncForm();
 
-        if(password !== confirmPassword){
-            setError("Passwords do not match");
-            return;
-        }
 
-        if(password.length < 8){
-            setError("Password must be at least 8 characters");
-            return;
-        }
+  const validateForm = () => {
+    const errors: FieldErrors = {};
 
-        setIsLoading(true);
-
-        try {
-            const {error} = await updatePassword(password);
-        
-            if(error) throw error;
-
-            setMessage("Password updated successfully. Redirecting to login...");
-
-            setTimeout(() => {
-                router.push("/login");
-            },2000);
-        } catch (error: unknown) { 
-            setError(error instanceof Error ? error.message : "An error occurred");
-        } finally {
-            setIsLoading(false);
-        }
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      errors.password = passwordError;
     }
 
-    return {
-        values: { password, confirmPassword },
-        setters: { setPassword, setConfirmPassword },
-        isLoading,
-        error,
-        message,
-        handleUpdatePassword,
-    };
+    if (password !== confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    await run(async () => {
+      const { error } = await updatePassword(password);
+      if (error) throw error;
+
+      setSuccess("Password updated successfully. Redirecting to login...");
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+    });
+  };
+
+  const clearFieldError = (field: keyof FieldErrors) => {
+    if (fieldErrors[field]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  return {
+    values: { password, confirmPassword },
+    setters: { setPassword, setConfirmPassword },
+    fieldErrors,
+    globalError,
+    globalSuccess,
+    isLoading,
+    submit,
+    clearFieldError,
+  };
 }

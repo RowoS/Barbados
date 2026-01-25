@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { redirect } from "next/dist/server/api-utils";
+
 
 export async function loginUser(email:string, password:string) {
   const supabase = createClient();
@@ -39,7 +39,7 @@ export async function forgetPassword(email: string) {
 export async function updatePassword(newPassword: string) {
   const supabase = createClient();
 
-  return supabase.auth.updateUser({
-    password: newPassword,
-  });
+  return supabase.auth.updateUser(
+    { password: newPassword }
+  );
 }

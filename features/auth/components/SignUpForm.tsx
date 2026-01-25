@@ -13,7 +13,7 @@ interface SignUpProps {
 export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { values, setters, errors, isLoading, submit } = useSignUpForm();
+  const { values, setters, fieldErrors, isLoading, submit } = useSignUpForm();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#DCE1DE] to-[#9CC5A1] flex items-center justify-center p-4">
@@ -47,7 +47,7 @@ export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
               label="Full Name"
               icon={<User />}
               value={values.username}
-              error={errors.username}
+              error={fieldErrors.username}
               onChange={(e) => setters.setUsername(e.target.value)}
             />
 
@@ -57,7 +57,7 @@ export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
               type="email"
               icon={<Mail />}
               value={values.email}
-              error={errors.email}
+              error={fieldErrors.email}
               onChange={(e) => setters.setEmail(e.target.value)}
             />
 
@@ -66,7 +66,7 @@ export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
               type={showPassword ? 'text' : 'password'}
               icon={<Lock />}
               value={values.password}
-              error={errors.password}
+              error={fieldErrors.password}
               onChange={(e) => setters.setPassword(e.target.value)}
               endAdornment={
                 <Button
@@ -84,7 +84,7 @@ export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
               type={showConfirmPassword ? 'text' : 'password'}
               icon={<Lock />}
               value={values.confirmPassword}
-              error={errors.confirmPassword}
+              error={fieldErrors.confirmPassword}
               onChange={(e) =>
               setters.setConfirmPassword(e.target.value)}
               endAdornment={

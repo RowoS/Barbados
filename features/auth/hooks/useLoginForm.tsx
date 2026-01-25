@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser, forgetPassword } from "../lib/auth-actions";
+import { useAsyncForm } from "./useAsyncForm";
+import { isValidEmail, validatePassword } from "@/features/auth/lib/validators";
 
 type FieldErrors = {
   email?: string;
@@ -10,30 +12,34 @@ type FieldErrors = {
 };
 
 export function useLoginForm() {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-
-  const [globalError, setGlobalError] = useState<string | null>(null);
-  const [globalSuccess, setGlobalSuccess] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-  const [isLoading, setIsLoading] = useState(false);
 
-  const router = useRouter();
+  const {
+    isLoading,
+    error: globalError,
+    success: globalSuccess,
+    setError,
+    setSuccess,
+    run,
+  } = useAsyncForm();
 
   const validateForm = () => {
     const errors: FieldErrors = {};
-
+    
     if (!email.trim()) {
       errors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    } else if (!isValidEmail(email)) {
       errors.email = "Please enter a valid email";
     }
 
-    if (!password.trim()) {
-      errors.password = "Password is required";
-    } else if (password.length < 8) {
-      errors.password = "Password must be at least 8 characters";
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      errors.password = passwordError;
     }
 
     setFieldErrors(errors);
@@ -43,41 +49,18 @@ export function useLoginForm() {
   const submit = async () => {
     if (!validateForm()) return;
 
-    setIsLoading(true);
-    setGlobalError(null);
-    setGlobalSuccess(null);
-
-    try {
+    await run(async () => {
       const { error } = await loginUser(email, password);
       if (error) throw error;
 
       router.refresh();
       router.push("/dashboard");
-    } catch (err) {
-      setGlobalError(err instanceof Error ? err.message : "Login failed");
-    } finally {
-      setIsLoading(false);
-    }
+    });
   };
 
-  const handleForgotPassword = async (e: React.MouseEvent) => {
+  const handleForgotPassword = (e: React.MouseEvent) => {
     e.preventDefault();
-    setGlobalError(null);
-    setGlobalSuccess(null);
-
-    if (!email.trim()) {
-      setFieldErrors({ email: "Enter your email to reset password" });
-      return;
-    }
-    setIsLoading(true);
-
-    try {
-      const { error } = await forgetPassword(email);
-      if (error) throw error;
-      setGlobalSuccess("Password reset link sent. Check your email.");
-    } catch (error: unknown) {
-      setGlobalError(error instanceof Error ? error.message : "Failed to send reset email");
-    }
+    router.push("/forgot-password");
   };
 
   const clearFieldError = (field: keyof FieldErrors) => {
@@ -89,11 +72,10 @@ export function useLoginForm() {
   return {
     values: { email, password, rememberMe },
     setters: { setEmail, setPassword, setRememberMe },
+    fieldErrors,
     globalError,
     globalSuccess,
-    fieldErrors,
     isLoading,
-    validateForm,
     submit,
     handleForgotPassword,
     clearFieldError,

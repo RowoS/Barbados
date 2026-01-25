@@ -25,7 +25,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
 
   const { email, password, rememberMe } = values;
   const { setEmail, setPassword, setRememberMe } = setters;
-
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -137,7 +136,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
               <Button
                 type="button"
                 variant="link"
-                onClick={handleForgotPassword}
+                onClick= {handleForgotPassword}
                 className="text-[#216869] font-medium"
               >
                 Forgot Password?
