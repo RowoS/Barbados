@@ -6,7 +6,7 @@ export default function UpdatePasswordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const code = searchParams.get("code"); // Supabase reset token
+  const code = searchParams.get("code");
   const errorParam = searchParams.get("error"); 
   const errorDescription = searchParams.get("error_description");
 

@@ -35,7 +35,7 @@ export const InputField: React.FC<InputFieldProps> = ({
 
       <div className="relative">
         {icon && (
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#216869]">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-accent-blue">
             {icon}
           </span>
         )}
@@ -46,7 +46,7 @@ export const InputField: React.FC<InputFieldProps> = ({
           {...props}
           className={`
             w-full py-3 bg-[#DCE1DE] text-[#1F2421] rounded-xl outline-none
-            focus:ring-2 focus:ring-[#216869] transition-all
+            focus:ring-2 focus:ring-accent-orange transition-all
             ${icon ? 'pl-12' : 'pl-4'}
             ${endAdornment ? 'pr-12' : 'pr-4'}
           `}

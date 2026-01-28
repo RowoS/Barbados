@@ -20,13 +20,13 @@ export default function ForgotPasswordSimple() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FF6B35] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-accent-yellow/80 to-accent-orange flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-2xl w-full">
         {/* Heading */}
-        <h1 className="text-3xl font-bold text-[#1D3557] mb-4 text-center">
+        <h1 className="text-3xl font-bold text-accent-blue mb-4 text-center">
           Forgot your password? Not to worry!
         </h1>
-        <p className="text-[#1D3557] text-lg mb-8 text-center">
+        <p className="text-accent-blue text-lg mb-8 text-center">
           Enter your email address below to receive instructions for the next step.
         </p>
 
@@ -52,7 +52,7 @@ export default function ForgotPasswordSimple() {
                 className={`w-full max-w-xs mx-auto block text-xl rounded-lg font-semibold transition-all shadow-lg
                     ${isLoading
                     ? "bg-gray-300 cursor-not-allowed"
-                    : "bg-[#F4D35E] hover:bg-[#f0c940] hover:shadow-xl"}
+                    : "bg-accent-orange hover:bg-hover-orange hover:shadow-xl"}
                 `}
                 >
                 {isLoading ? "Sending..." : "Reset Password"}

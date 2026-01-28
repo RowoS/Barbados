@@ -29,7 +29,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-[#216869] rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-b from-[var(--accent-yellow)]/80 to-[var(--accent-orange)] rounded-lg flex items-center justify-center">
                 <UtensilsCrossed className="w-6 h-6" />
               </div>
               <span className="text-xl font-bold">Buybites</span>

@@ -38,7 +38,7 @@ export default function GoogleButton({
     <Button 
       type="button"
       onClick={handleGoogleLogin}
-      className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-[#DCE1DE] hover:border-[#9CC5A1] rounded-xl transition-all bg-white hover:bg-white text-[#1F2421] font-medium"
+      className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-accent-black/40 hover:border-hover-orange rounded-xl transition-all bg-white hover:bg-white text-[#1F2421] font-medium"
     >
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>

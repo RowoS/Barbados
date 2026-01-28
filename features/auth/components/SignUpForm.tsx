@@ -16,149 +16,169 @@ export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
   const { values, setters, fieldErrors, isLoading, submit } = useSignUpForm();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#DCE1DE] to-[#9CC5A1] flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Logo and Title */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-[#216869] to-[#49A078] rounded-2xl flex items-center justify-center">
-              <Smartphone className="w-8 h-8 text-white" />
-            </div>
-            <span className="text-3xl font-bold text-[#1F2421]">FoodHub</span>
-          </div>
-          <h1 className="text-3xl font-bold text-[#1F2421] mb-2">
-            Create Account
-          </h1>
-          <p className="text-[#1F2421]/70">
-            Join us and start ordering delicious food
-          </p>
+
+    <div className="min-h-screen flex flex-col md:flex-row">
+
+      <div className="hidden md:block md:w-1/2 relative">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: 'url("/food-app.png")' }}
+        >
+          <div className="absolute inset-0 bg-black/20"></div>
         </div>
+      </div>
 
-        <div className="bg-white rounded-3xl shadow-xl p-8">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              submit();
-            }}
-            className="space-y-5"
-          >
-            {/* Full Name */}
-            <InputField
-              label="Full Name"
-              icon={<User />}
-              value={values.username}
-              error={fieldErrors.username}
-              onChange={(e) => setters.setUsername(e.target.value)}
-            />
-
-            {/* Email */}
-            <InputField
-              label="Email Address"
-              type="email"
-              icon={<Mail />}
-              value={values.email}
-              error={fieldErrors.email}
-              onChange={(e) => setters.setEmail(e.target.value)}
-            />
-
-            <InputField
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              icon={<Lock />}
-              value={values.password}
-              error={fieldErrors.password}
-              onChange={(e) => setters.setPassword(e.target.value)}
-              endAdornment={
-                <Button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                {showPassword ? <EyeOff /> : <Eye />}
-                </Button>
-              }
-            />
-
-            {/* Confirm Password */}
-            <InputField
-              label="Confirm Password"
-              type={showConfirmPassword ? 'text' : 'password'}
-              icon={<Lock />}
-              value={values.confirmPassword}
-              error={fieldErrors.confirmPassword}
-              onChange={(e) =>
-              setters.setConfirmPassword(e.target.value)}
-              endAdornment={
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setShowConfirmPassword(!showConfirmPassword)
-                  }
-                >
-                {showConfirmPassword ? <EyeOff /> : <Eye />}
-                </Button>
-              }
-            />
-
-
-            {/* Terms */}
-            <div className="flex items-start gap-2">
-              <input
-                type="checkbox"
-                id="terms"
-                className="w-4 h-4 mt-1 rounded border-[#216869] text-[#216869] focus:ring-[#216869]"
-                required
-              />
-              <label htmlFor="terms" className="text-sm text-[#1F2421]">
-                I agree to the{' '}
-                <a className="text-[#216869] font-medium hover:text-[#1a5657]">
-                  Terms & Conditions
-                </a>{' '}
-                and{' '}
-                <a className="text-[#216869] font-medium hover:text-[#1a5657]">
-                  Privacy Policy
-                </a>
-              </label>
+      <div className="flex-1 md:w-1/2 bg-gradient-to-b from-accent-orange from-[0.01%]
+        via-accent-yellow via-[49.5%] to-accent-orange to-[99.99%]
+        flex items-center justify-center p-4 md:p-8">
+        <div className="w-full max-w-md">
+          {/* Logo and Title */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="w-14 h-14 bg-accent-blue rounded-2xl flex items-center justify-center">
+                <Smartphone className="w-8 h-8 text-white" />
+              </div>
+              <span className="text-3xl font-bold text-white">FoodHub</span>
             </div>
-
-            {/* Submit */}
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-gradient-to-r from-[#216869] to-[#49A078] text-white py-3.5 rounded-xl font-medium"
-            >
-              {isLoading ? 'Creating account...' : 'Create Account'}
-            </Button>
-          </form>
-
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#DCE1DE]" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-[#1F2421]/60">
-                Or sign up with
-              </span>
-            </div>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Create Account
+            </h1>
+            <p className="text-white/80">
+              Join us and start ordering delicious food
+            </p>
           </div>
 
-          <GoogleButton nextRoute="/dashboard" />
+          <div className="bg-white rounded-3xl shadow-xl p-8">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                submit();
+              }}
+              className="space-y-5"
+            >
+              {/* Full Name */}
+              <InputField
+                label="Full Name"
+                placeholder='Enter your Full Name'
+                icon={<User />}
+                value={values.username}
+                error={fieldErrors.username}
+                onChange={(e) => setters.setUsername(e.target.value)}
+              />
 
-          {/* Login */}
-          <div className="mt-6 text-center">
-            <p className="text-[#1F2421]/70">
-              Already have an account?{' '}
+              {/* Email */}
+              <InputField
+                label="Email Address"
+                placeholder='Enter your Email Address'
+                type="email"
+                icon={<Mail />}
+                value={values.email}
+                error={fieldErrors.email}
+                onChange={(e) => setters.setEmail(e.target.value)}
+              />
+
+              <InputField
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder='Enter your Password'
+                icon={<Lock />}
+                value={values.password}
+                error={fieldErrors.password}
+                onChange={(e) => setters.setPassword(e.target.value)}
+                endAdornment={
+                  <Button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                  {showPassword ? <EyeOff /> : <Eye />}
+                  </Button>
+                }
+              />
+
+              {/* Confirm Password */}
+              <InputField
+                label="Confirm Password"
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder='Enter your Password Again'
+                icon={<Lock />}
+                value={values.confirmPassword}
+                error={fieldErrors.confirmPassword}
+                onChange={(e) =>
+                setters.setConfirmPassword(e.target.value)}
+                endAdornment={
+                  <Button
+                    type="button"
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
+                  >
+                  {showConfirmPassword ? <EyeOff /> : <Eye />}
+                  </Button>
+                }
+              />
+
+
+              {/* Terms */}
+              <div className="flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  className="w-4 h-4 mt-1 rounded border-black text-accent-orange focus:ring-hover-orange"
+                  required
+                />
+                <label htmlFor="terms" className="text-sm text-accent-black">
+                  I agree to the{' '}
+                  <a className="text-accent-orange font-medium hover:text-hover-orange">
+                    Terms & Conditions
+                  </a>{' '}
+                  and{' '}
+                  <a className="text-accent-orange font-medium hover:text-hover-orange">
+                    Privacy Policy
+                  </a>
+                </label>
+              </div>
+
+              {/* Submit */}
               <Button
-                onClick={onSwitchToLogin}
-                className="text-[#216869] font-medium hover:text-[#1a5657]"
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-accent-orange to-accent-yellow text-white py-3.5 rounded-xl font-medium"
               >
-                Sign In
+                {isLoading ? 'Creating account...' : 'Create Account'}
               </Button>
-            </p>
+            </form>
+
+            {/* Divider */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-accent-black" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-accent-black/60">
+                  Or sign up with
+                </span>
+              </div>
+            </div>
+
+            <GoogleButton nextRoute="/dashboard" />
+
+            {/* Login */}
+            <div className="mt-6 text-center">
+              <p className="text-black/70">
+                Already have an account?{' '}
+                <Button
+                  onClick={onSwitchToLogin}
+                  className="text-accent-blue font-medium hover:text-hover-orange hover:underline"
+                >
+                  Sign In
+                </Button>
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    
   );
 }
 
