@@ -1,7 +1,7 @@
-import SignUp from "@/features/auth/components/SignUpForm";
+import RoleSelectionForm from "@/features/auth/components/RoleSelectionForm";
 
-export default function SignUpPage() {
-  
+export default function RoleSelectionPage() {
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
        <div className="hidden md:block md:w-1/2 relative">
@@ -16,7 +16,7 @@ export default function SignUpPage() {
       <div className="flex-1 md:w-1/2 bg-gradient-to-b from-accent-orange from-[0.01%]
         via-accent-yellow via-[49.5%] to-accent-orange to-[99.99%]
         flex items-center justify-center p-4 md:p-8">
-        <SignUp/>
+        <RoleSelectionForm/>
       </div>
     </div>
   );

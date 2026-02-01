@@ -9,6 +9,7 @@ import { LoginFormProps } from "@/shared/types";
 import GoogleButton from "@/features/auth/components/GoogleSignInButton";
 import { useLoginForm } from "@/features/auth/hooks/useLoginForm";
 import { Mail, Lock, Eye, EyeOff, Smartphone } from "lucide-react";
+import EmailVerificationModal from "./EmailConfirmationModal";
 
 export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => {
   const {
@@ -18,14 +19,17 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
     globalSuccess,
     fieldErrors,
     isLoading,
+
     submit,
     handleForgotPassword,
     clearFieldError,
   } = useLoginForm();
 
+
   const { email, password, rememberMe } = values;
   const { setEmail, setPassword, setRememberMe } = setters;
   const [showPassword, setShowPassword] = useState(false);
+
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -199,6 +203,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
                 Create one here
               </a>
             </p>
+
+            {values.showVerificationModal && email && (
+              <EmailVerificationModal
+                email={email}
+                onClose={() => setters.setShowVerificationModal(false)}
+              />
+            )}
           </div>
         </div>
       </div>

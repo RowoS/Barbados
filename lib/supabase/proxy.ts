@@ -1,13 +1,28 @@
 import { createServerClient } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+
+const PUBLIC_ROUTES = [
+  '/login',
+  '/forgot-password',
+  '/error',
+  '/sign-up',
+  '/'
+]
+
+const AUTH_ONLY_ROUTES = [
+  '/login',
+  '/forgot-password',
+  '/sign-up',
+  '/',
+]
+
+const ROLE_SELECTION_ROUTE = '/sign-up/role-select'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   })
 
-  // With Fluid compute, don't put this client in a global environment
-  // variable. Always create a new one on each request.
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
@@ -27,39 +42,60 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  const pathname = request.nextUrl.pathname
+  const isPublicRoute = PUBLIC_ROUTES.some((route) =>
+    pathname.startsWith(route)
+  )
+  const isAuthOnlyRoute = AUTH_ONLY_ROUTES.some((route) =>
+    pathname === route
+  )
 
-  // IMPORTANT: If you remove getClaims() and you use server-side rendering
-  // with the Supabase client, your users may be randomly logged out.
-  const { data } = await supabase.auth.getClaims()
 
-  const user = data?.claims
+  const isRoleSelectionRoute = pathname.startsWith(ROLE_SELECTION_ROUTE)
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  if (!user && (!isPublicRoute || isRoleSelectionRoute)) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
-  // creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
+
+  if (user && isAuthOnlyRoute) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/dashboard'
+    return NextResponse.redirect(url)
+  }
+
+  if (user) {
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (error) {
+      console.error('Profile fetch failed:', error)
+      const url = request.nextUrl.clone()
+      url.pathname = '/error'
+      return NextResponse.redirect(url)
+    }
+
+    const hasNoRole = !profile?.role || profile.role === 'new'
+
+    if (hasNoRole && !isRoleSelectionRoute) {
+      const url = request.nextUrl.clone()
+      url.pathname = ROLE_SELECTION_ROUTE
+      return NextResponse.redirect(url)
+    }
+
+    if (!hasNoRole && isRoleSelectionRoute) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/dashboard'
+      return NextResponse.redirect(url)
+    }
+  }
 
   return supabaseResponse
 }

@@ -53,7 +53,7 @@ export const InputField: React.FC<InputFieldProps> = ({
         />
 
         {endAdornment && (
-          <div className="absolute right-4 top-1/2 -translate-y-1/2">
+          <div className="absolute right-4 top-1/2 text-accent-black -translate-y-1/2">
             {endAdornment}
           </div>
         )}

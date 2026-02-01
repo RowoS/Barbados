@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { loginUser, forgetPassword } from "../lib/auth-actions";
+import {useRouter } from "next/navigation";
+import { loginUser} from "../lib/auth-actions";
 import { useAsyncForm } from "./useAsyncForm";
 import { isValidEmail, validatePassword } from "@/features/auth/lib/validators";
 
@@ -18,6 +18,7 @@ export function useLoginForm() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
 
   const {
     isLoading,
@@ -47,16 +48,26 @@ export function useLoginForm() {
   };
 
   const submit = async () => {
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    await run(async () => {
-      const { error } = await loginUser(email, password);
-      if (error) throw error;
+  await run(async () => {
+    const { user,profile, error, profileError } = await loginUser(email, password)
+    
+     if (error) {
+      if (error.message?.toLowerCase().includes('email not confirmed') || 
+            error.message?.toLowerCase().includes('confirm your email')) {
+          setShowVerificationModal(true);
+          setError(null);
+          return;
+        }
+      throw error;
+    }
 
-      router.refresh();
-      router.push("/dashboard");
-    });
+    router.refresh()
+  });
   };
+
+
 
   const handleForgotPassword = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -70,8 +81,8 @@ export function useLoginForm() {
   };
 
   return {
-    values: { email, password, rememberMe },
-    setters: { setEmail, setPassword, setRememberMe },
+    values: { email, password, rememberMe, showVerificationModal },
+    setters: { setEmail, setPassword, setRememberMe, setShowVerificationModal },
     fieldErrors,
     globalError,
     globalSuccess,

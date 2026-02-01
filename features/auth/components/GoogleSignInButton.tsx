@@ -1,43 +1,21 @@
 "use client";
 
 import { Button } from "@/shared/ui/button";
-import { createClient } from "@/lib/supabase/client";
+import { GoogleButtonLogic } from "../hooks/GoogleButtonLogic";
 
 interface GoogleButtonProps {
   nextRoute?: string; 
   text?: string;    
 }
 
-export default function GoogleButton({ 
-  nextRoute = "/dashboard", 
-  text = "Google" 
-}: GoogleButtonProps) {
+export default function GoogleButton({ nextRoute = "/dashboard", text = "Google" }: GoogleButtonProps) {
   
-  const handleGoogleLogin = async () => {
-    const supabase = createClient();
-    
-    const redirectTo = `${window.location.origin}/auth/callback?next=${nextRoute}`;
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: redirectTo,
-        queryParams: {
-          access_type: "offline",
-          prompt: "consent",
-        },
-      },
-    });
-
-    if (error) {
-      console.error("Google Login Error:", error);
-    }
-  };
+  const { isLoading, error, success, handleLogin } = GoogleButtonLogic(nextRoute);
 
   return (
     <Button 
       type="button"
-      onClick={handleGoogleLogin}
+      onClick={handleLogin}
       className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-accent-black/40 hover:border-hover-orange rounded-xl transition-all bg-white hover:bg-white text-[#1F2421] font-medium"
     >
       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">

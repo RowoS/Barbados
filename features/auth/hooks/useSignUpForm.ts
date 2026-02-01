@@ -21,6 +21,7 @@ export function useSignUpForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
 
   const {isLoading,error: globalError,run,} = useAsyncForm();
 
@@ -59,7 +60,7 @@ export function useSignUpForm() {
       const { error } = await signUpUser(email, password, username);
       if (error) throw error;
 
-      router.push("/sign-up-success");
+      setShowVerificationModal(true);
     });
   };
 
@@ -70,8 +71,8 @@ export function useSignUpForm() {
   };
 
   return {
-    values: { username, email, password, confirmPassword },
-    setters: {setUsername,setEmail,setPassword,setConfirmPassword,},
+    values: { username, email, password, confirmPassword, showVerificationModal },
+    setters: {setUsername,setEmail,setPassword,setConfirmPassword, setShowVerificationModal},
     fieldErrors,
     globalError,
     isLoading,

@@ -1,40 +1,74 @@
-// features/auth/application/handleOAuthCallback.ts
 import { createClient } from '@/lib/supabase/server'
-import type { OAuthCallbackResult } from '../types/index'
+import type { OAuthCallbackResult } from '../types'
 
-export async function handleOAuthCallback(request: Request): Promise<OAuthCallbackResult> {
+export async function handleOAuthCallback(
+  request: Request
+): Promise<OAuthCallbackResult> {
   const url = new URL(request.url)
   const code = url.searchParams.get('code')
-  const next = url.searchParams.get('next') ?? '/tasks'
+  const error = url.searchParams.get('error')
   const origin = url.origin
 
+  // Handle OAuth errors first
+  if (error) {
+    console.error('OAuth error in callback:', {
+      error,
+      error_code: url.searchParams.get('error_code'),
+      error_description: url.searchParams.get('error_description')
+    })
+    return { type: 'error', fallback: `${origin}/error` }
+  }
+
   if (!code) {
-    return {
-      type: 'error',
-      fallback: `${origin}/(auth)/error`,
-    }
+    console.error('No code provided in OAuth callback')
+    return { type: 'error', fallback: `${origin}/error` }
   }
 
   const supabase = await createClient()
-  const { error } = await supabase.auth.exchangeCodeForSession(code)
+  
+  try {
+    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
 
-  if (error) {
-    return {
-      type: 'error',
-      fallback: `${origin}/(auth)/error`,
+    if (exchangeError) {
+      console.error('OAuth exchange failed:', exchangeError)
+      return { type: 'error', fallback: `${origin}/error` }
     }
-  }
 
-  const forwardedHost = request.headers.get('x-forwarded-host')
-  const isLocal = process.env.NODE_ENV === 'development'
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    
+    if (userError || !user) {
+      console.error('Failed to get user after exchange:', userError)
+      return { type: 'error', fallback: `${origin}/error` }
+    }
 
-  const redirectBase =
-    isLocal || !forwardedHost
-      ? origin
-      : `https://${forwardedHost}`
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
 
-  return {
-    type: 'redirect',
-    url: `${redirectBase}${next}`,
+
+    if (profileError) {
+      if (profileError.code === 'PGRST116') { 
+        console.log('No profile found for user, redirecting to role selection')
+        return {
+          type: 'redirect',
+          url: `${origin}/sign-up/role-select`,
+        }
+      }
+      console.error('Profile fetch failed:', profileError)
+      return { type: 'error', fallback: `${origin}/error` }
+    }
+
+    const hasNoRole = !profile?.role || profile.role === 'new'
+    const redirectPath = hasNoRole ? '/sign-up/role-select' : '/dashboard'
+
+    return {
+      type: 'redirect',
+      url: `${origin}${redirectPath}`,
+    }
+  } catch (err) {
+    console.error('Unexpected error in OAuth callback:', err)
+    return { type: 'error', fallback: `${origin}/error` }
   }
 }
