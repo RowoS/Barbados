@@ -18,17 +18,11 @@ export default function NavBar() {
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#" className="text-accent-gray hover:text-accent-orange transition-colors">
+            <a href="/login" className="text-accent-gray hover:text-accent-orange transition-colors">
               Home
             </a>
             <a href="#" className="text-accent-gray hover:text-accent-orange transition-colors">
               Restaurants
-            </a>
-            <a href="#" className="text-accent-gray hover:text-accent-orange transition-colors">
-              About
-            </a>
-            <a href="#" className="text-accent-gray hover:text-accent-orange transition-colors">
-              Contact
             </a>
           </nav>
 

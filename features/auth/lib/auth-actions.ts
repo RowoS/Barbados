@@ -44,7 +44,7 @@ export async function signUpUser(email: string,password: string,username: string
     email,
     password,
     options: {
-      emailRedirectTo: `${window.location.origin}/sign-up/role-select`,
+      emailRedirectTo: `${window.location.origin}/login?verified=true`,
       data: { "display_name": username },
 
     },

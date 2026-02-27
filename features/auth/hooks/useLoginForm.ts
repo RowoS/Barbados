@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import {useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import {useRouter, useSearchParams } from "next/navigation";
 import { loginUser} from "../lib/auth-actions";
 import { useAsyncForm } from "./useAsyncForm";
 import { isValidEmail, validatePassword } from "@/features/auth/lib/validators";
@@ -13,21 +13,31 @@ type FieldErrors = {
 
 export function useLoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [showVerifiedEmailModal, setShowVerifiedEmailModal] = useState(false);
 
   const {
     isLoading,
     error: globalError,
     success: globalSuccess,
     setError,
-    setSuccess,
     run,
   } = useAsyncForm();
+
+  useEffect(() => {
+    if (searchParams.get("verified") === "true") {
+      setShowVerifiedEmailModal(true);
+
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }, [searchParams]); 
 
   const validateForm = () => {
     const errors: FieldErrors = {};
@@ -81,8 +91,8 @@ export function useLoginForm() {
   };
 
   return {
-    values: { email, password, rememberMe, showVerificationModal },
-    setters: { setEmail, setPassword, setRememberMe, setShowVerificationModal },
+    values: { email, password, rememberMe, showVerificationModal, showVerifiedEmailModal },
+    setters: { setEmail, setPassword, setRememberMe, setShowVerificationModal, setShowVerifiedEmailModal   },
     fieldErrors,
     globalError,
     globalSuccess,

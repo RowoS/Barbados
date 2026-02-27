@@ -1,19 +1,22 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
 
-const PUBLIC_ROUTES = [
-  '/login',
-  '/forgot-password',
-  '/error',
-  '/sign-up',
-  '/'
+const PROTECTED_ROUTES = [
+  '/dashboard',
+  '/order',
 ]
 
 const AUTH_ONLY_ROUTES = [
   '/login',
   '/forgot-password',
   '/sign-up',
-  '/',
+]
+const PUBLIC_ROUTES = [
+  '/login',
+  '/forgot-password',
+  '/error',
+  '/sign-up',
+  '/'
 ]
 
 const ROLE_SELECTION_ROUTE = '/sign-up/role-select'
@@ -45,17 +48,18 @@ export async function updateSession(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   
   const pathname = request.nextUrl.pathname
-  const isPublicRoute = PUBLIC_ROUTES.some((route) =>
+
+  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
     pathname.startsWith(route)
   )
-  const isAuthOnlyRoute = AUTH_ONLY_ROUTES.some((route) =>
-    pathname === route
-  )
 
+  const isAuthOnlyRoute = AUTH_ONLY_ROUTES.some((route) =>
+    pathname.startsWith(route)
+  )
 
   const isRoleSelectionRoute = pathname.startsWith(ROLE_SELECTION_ROUTE)
 
-  if (!user && (!isPublicRoute || isRoleSelectionRoute)) {
+  if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
