@@ -3,11 +3,24 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --accent-black: #1E1A11;
+  --accent-yellow: #F4D35E;
+  --accent-blue:#1D3557;
+  --accent-orange: #FF6B35;
+  --hover-orange: #d85327;
+  --accent-gray: #F7F7F7;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-accent-black: var(--accent-black);
+  --color-gradient-orange: var(--gradient-orange);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-yellow: var(--accent-yellow);
+  --color-hover-orange: var(--hover-orange);
+  --color-accent-gray: var(--accent-gray);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
