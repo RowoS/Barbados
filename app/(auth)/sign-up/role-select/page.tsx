@@ -1,4 +1,4 @@
-import RoleSelectionForm from "@/features/auth/components/RoleSelectionForm";
+import RoleSelectionForm from "@/features/auth/components/forms/RoleSelectionForm";
 
 export default function RoleSelectionPage() {
 

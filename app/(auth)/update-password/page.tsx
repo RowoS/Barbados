@@ -1,6 +1,6 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import UpdatePasswordForm from "@/features/auth/components/UpdatePasswordForm";
+import UpdatePasswordForm from "@/features/auth/components/forms/UpdatePasswordForm";
 
 export default function UpdatePasswordPage() {
   const router = useRouter();
