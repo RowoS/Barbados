@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Barbados
+*Food Ordering Platform built for residents of Baybay City*
 
-## Getting Started
+|        Internal Release Code          |    Date Released         |
+| ---------------- | ---------- |
+|  BS.010.001     |     2026-02-27     |
+|  BS.010.002     |     2026-03-19   |
+| BS.010.003 | 2026-03-19 |
+| | |
 
-First, run the development server:
+## BS.010.003 Release Notes
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+* refactor: Update Middleware
+* feat: Server-Side rendering for Store Set-up Page and Dashboard
+* feat: Add initial dashboard page for vendors
+* feat: Add Initial Set-up Page for Store Creation
+* feat: Add new UI components for vendor components
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## BS.010.002 Release Notes
+* feat: Add Location Marking feature on Leaflet Map and Packages
+* feat: Implement Leaflet Map
+* revert: remove changes from components and updates
+* refactor: Folder restructuring 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## BS.010.001 Release Notes
 
-## Learn More
+* refactor: Update Middleware
+* feat: Add Email Verified Modal
+* refactor: Update Middleware and Forms for Role-based Authentication
+* refactor: Update UI for Authentication Forms and Landing Page
+* feat: Add Functionality to Reset & Update Password Form
+* feat: Add Google Auth and redirects
+* feat: Add Update Password Form for Password Reset
+* feat: Add Sign Up Hook and Update Login Functionality
+* fix: Login Page UI and imports
+* feat: Add Supabase Client
+* feat:Add Login and Sign Up Forms
+* feat: Add UI for Landing Page
+* Create Initial Next JS Project
+* Initial commit
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Important Links
+* Design Specs: [Barbados Docportal](https://github.com/RowoS/Barbados-docportal)
