@@ -1,7 +1,7 @@
 'use client';
 
 import { updateRole } from "../lib/auth-actions";
-import { useAsyncForm } from "./useAsyncForm";
+import { useAsyncForm } from "@/features/shared/hooks/useAsyncForm";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

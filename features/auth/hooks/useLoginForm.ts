@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import {useRouter, useSearchParams } from "next/navigation";
-import { loginUser} from "../lib/auth-actions";
-import { useAsyncForm } from "./useAsyncForm";
+import { loginUser, verifyMFA } from "../lib/auth-actions";
+import { useAsyncForm } from "@/features/shared/hooks/useAsyncForm";
 import { isValidEmail, validatePassword } from "@/features/auth/lib/validators";
+
 
 type FieldErrors = {
   email?: string;
@@ -21,6 +22,9 @@ export function useLoginForm() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [showVerifiedEmailModal, setShowVerifiedEmailModal] = useState(false);
+  const [requiresMFA, setRequiresMFA] = useState(false);
+  const [mfaChallengeId, setMfaChallengeId] = useState<string | null>(null);
+  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null);
 
   const {
     isLoading,
@@ -56,27 +60,42 @@ export function useLoginForm() {
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
+  
 
   const submit = async () => {
-  if (!validateForm()) return;
+    if (!validateForm()) return;
+    await run(async () => {
+      const result = await loginUser(email, password);
 
-  await run(async () => {
-    const { user,profile, error, profileError } = await loginUser(email, password)
-    
-     if (error) {
-      if (error.message?.toLowerCase().includes('email not confirmed') || 
-            error.message?.toLowerCase().includes('confirm your email')) {
+      if (result.error) {
+        if (result.error.message?.toLowerCase().includes('email not confirmed') ||
+            result.error.message?.toLowerCase().includes('confirm your email')) {
           setShowVerificationModal(true);
           setError(null);
           return;
         }
-      throw error;
-    }
+        throw result.error;
+      }
 
-    router.refresh()
-  });
+      if (result.requiresMFA) {
+        setRequiresMFA(true);
+        setMfaChallengeId(result.challengeId ?? null);
+        setMfaFactorId(result.factorId ?? null);
+        return;
+      }
+
+      router.refresh();
+    });
   };
 
+  const submitTotp = async (code: string) => {
+    if (!mfaFactorId || !mfaChallengeId) return;
+    await run(async () => {
+      const result = await verifyMFA(mfaFactorId, mfaChallengeId, code);
+      if (result.error) throw result.error;
+      router.refresh();
+    });
+  };
 
 
   const handleForgotPassword = (e: React.MouseEvent) => {
@@ -91,12 +110,13 @@ export function useLoginForm() {
   };
 
   return {
-    values: { email, password, rememberMe, showVerificationModal, showVerifiedEmailModal },
-    setters: { setEmail, setPassword, setRememberMe, setShowVerificationModal, setShowVerifiedEmailModal   },
+    values: { email, password, rememberMe, showVerificationModal, showVerifiedEmailModal, requiresMFA },
+    setters: { setEmail, setPassword, setRememberMe, setShowVerificationModal, setShowVerifiedEmailModal, setRequiresMFA },
     fieldErrors,
     globalError,
     globalSuccess,
     isLoading,
+    submitTotp,
     submit,
     handleForgotPassword,
     clearFieldError,

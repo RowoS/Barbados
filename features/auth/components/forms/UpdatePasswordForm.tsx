@@ -2,7 +2,7 @@
 
 import { Button } from "@/shared/ui/button";
 import { InputField } from "@/shared/components/InputField";
-import { useUpdatePasswordForm } from "../hooks/useUpdatePassForm";
+import { useUpdatePasswordForm } from "@/features/auth/hooks/useUpdatePassForm";
 import { Smartphone } from "lucide-react";
 
 export default function UpdatePasswordForm() {

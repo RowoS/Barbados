@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter} from "next/navigation";
 import { updatePassword} from "../lib/auth-actions";
-import { useAsyncForm } from "./useAsyncForm";
+import { useAsyncForm } from "@/features/shared/hooks/useAsyncForm";
 import { validatePassword } from "@/features/auth/lib/validators";
 
 type FieldErrors = {
