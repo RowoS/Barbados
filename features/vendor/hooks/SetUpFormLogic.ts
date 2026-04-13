@@ -1,43 +1,16 @@
 "use client";
 
-import { useAsyncForm } from "@/features/vendor/hooks/useAsyncForm";
+import { useAsyncForm } from "@/features/shared/hooks/useAsyncForm";
 import { useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ConfirmedLocation } from "@/features/maps/types/types";
+import { StoreFormData, INITIAL_FORM, StoreSetupProps } from "../types/types";
 
-interface StoreFormData {
-  storeName: string;
-  storeDescription: string;
-  address: string;
-  phone: string;
-  email: string;
-  openingTime: string;
-  closingTime: string;
-  latitude: number | null; 
-  longitude: number | null;
-}
- 
-const INITIAL_FORM: StoreFormData = {
-  storeName: '',
-  storeDescription: '',
-  address: '',
-  phone: '',
-  email: '',
-  openingTime: '',
-  closingTime: '',
-  latitude: null, 
-  longitude: null, 
-};
-
-interface StoreSetupProps {
-  onComplete?: () => void;
-  userId: string;
-}
 
 const MAX_SIZE_MB = 1;
 
-    export function useSetUpFormLogic( { userId, onComplete }: StoreSetupProps) {
-        const supabase = createClient();
+export function useSetUpFormLogic( { userId, onComplete }: StoreSetupProps) {
+    const supabase = createClient();
     const { isLoading, error, setError, run } = useAsyncForm();
 
     const [currentStep, setCurrentStep] = useState(1);
@@ -102,7 +75,7 @@ const MAX_SIZE_MB = 1;
         setError(null);
         setCurrentStep(2);
         } else {
-        if (!formData.address|| !formData.phone || !formData.email) {
+        if (!formData.address|| !formData.phone) {
             setError('Please fill in all required fields.');
             return;
         }
@@ -137,7 +110,6 @@ const MAX_SIZE_MB = 1;
                 ? `POINT(${formData.longitude} ${formData.latitude})`
                 : null,
             phone_numbers: [formData.phone],
-            email: formData.email,
             address: formData.address,
             opening_time: formData.openingTime || null,
             closing_time: formData.closingTime || null,
