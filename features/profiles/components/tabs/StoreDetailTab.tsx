@@ -1,73 +1,91 @@
-import {User,Plus} from "lucide-react";
+import { User, Plus, X, Link2} from 'lucide-react';
+import { StoreInfo, StoreDetailsTabProps } from '../../types/types';
+import { getBrandIcon } from "../../libs/brand-icons";
 
-interface StoreDetailsTabProps {
-  onUpdateLocation: () => void;
-}
 
-export default function StoreDetailsTab({ onUpdateLocation }: StoreDetailsTabProps) {
+export default function StoreDetailsTab({ storeInfo, onUpdateLocation, onAddPhone, onPhoneChange, onPhoneRemove , onAccountChange, onAccountRemove}: StoreDetailsTabProps) {
     return (
         <>
-                <div>
+            <div>
                 <h3 className="text-white mb-3">Store logo</h3>
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-                    <User className="w-8 h-8 text-gray-600" />
-                  </div>
-                  <button className="bg-[#3D3D3D] hover:bg-[#4D4D4D] text-white px-4 py-2 rounded-lg transition-colors">
-                    Update
-                  </button>
-                  <button className="text-red-400 hover:text-red-300 px-4 py-2 transition-colors">
-                    Remove
-                  </button>
+                    <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
+                        {storeInfo?.store_logo
+                            ? <img src={storeInfo.store_logo} alt="Store Logo" className="w-full h-full object-cover" />
+                            : <User className="w-8 h-8 text-gray-600" />
+                        }
+                    </div>
+                    <button className="bg-[#3D3D3D] hover:bg-[#4D4D4D] text-white px-4 py-2 rounded-lg transition-colors">
+                        Update
+                    </button>
+                    <button className="text-red-400 hover:text-red-300 px-4 py-2 transition-colors">
+                        Remove
+                    </button>
                 </div>
 
-                {/* Store Location */}
                 <div className="pt-5">
                     <h3 className="text-white mb-3">Store location</h3>
                     <div className="flex items-center gap-3 mb-2">
-                        <span className="text-gray-300">Brgy Guadulupe, Baybay</span>
+                        <span className="text-gray-300">{storeInfo?.address ?? "No address set"}</span>
                     </div>
                     <button onClick={onUpdateLocation} className="bg-[#3D3D3D] hover:bg-[#4D4D4D] text-white px-4 py-2 rounded-lg transition-colors">
-                            Update Store Location
+                        Update Store Location
                     </button>
-
                 </div>
+            </div>
 
-              </div>
-
-              {/* Phone Number */}
-              <div>
+            {/* Phone Numbers */}
+            <div>
                 <h3 className="text-white mb-3">Phone number</h3>
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-gray-300">+1 (545) 124-4547</span>
-                  <span className="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs">Primary</span>
-                </div>
-                <button className="text-gray-400 hover:text-gray-300 flex items-center gap-2 text-sm transition-colors">
-                  <Plus className="w-4 h-4" />
-                  Add phone number
+                {storeInfo?.phone_numbers?.map((number, i) => (
+                    <div key={i} className="flex items-center gap-3 mb-2">
+                    <input
+                        value={number}
+                        onChange={(e) => onPhoneChange(i, e.target.value)}
+                        className="bg-[#1D1D1D] text-gray-300 px-3 py-1.5 rounded-lg text-sm w-48 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                    />
+                    {i === 0 && <span className="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs">Primary</span>}
+                    <button onClick={() => onPhoneRemove(i)} className="text-red-400 hover:text-red-300 text-xs">Remove</button>
+                    </div>
+                ))}
+                <button onClick={onAddPhone} className="text-gray-400 hover:text-gray-300 flex items-center gap-2 text-sm mt-2">
+                    <Plus className="w-4 h-4" /> Add phone number
                 </button>
-              </div>
+            </div>
 
-              {/* Connected Accounts */}
-              <div>
-                <h3 className="text-white mb-3">External Links</h3>
-                <div className="flex items-center gap-3 mb-2">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                  </svg>
-                  <span className="text-gray-300">Google</span>
-                  <span className="text-gray-400">•</span>
-                  <span className="text-gray-400">example@gmail.com</span>
-                </div>
-                <button className="text-gray-400 hover:text-gray-300 flex items-center gap-2 text-sm transition-colors">
-                  <Plus className="w-4 h-4" />
-                  Add links
+            {/* Connected Accounts */}
+            <div>
+                <h3 className="text-white mb-3">Connected Accounts</h3>
+                {storeInfo?.connected_accounts?.length
+                    ? storeInfo.connected_accounts.map((account, i) => (
+                        <div key={i} className="flex items-center gap-3 mb-2">
+                            {getBrandIcon(account)}
+                            <input
+                                value={account}
+                                onChange={(e) => onAccountChange(i, e.target.value)}
+                                placeholder="https://..."
+                                className="bg-[#1D1D1D] text-gray-300 px-3 py-1.5 rounded-lg text-sm flex-1 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                            />
+
+                            <a
+                                href={account}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`text-xs text-purple-400 hover:underline ${!account.startsWith("http") ? "pointer-events-none opacity-40" : ""}`}
+                            >
+                                <span className="text-gray-300">{account}</span>
+                            </a>
+                            <button onClick={() => onAccountRemove(i)} className="text-red-400 hover:text-red-300">
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+                    ))
+                    : <span className="text-gray-400 text-sm">No connected accounts</span>
+                }
+                <button onClick={() => onAccountChange(storeInfo?.connected_accounts?.length ?? 0, "")} className="text-gray-400 hover:text-gray-300 flex items-center gap-2 text-sm mt-2">
+                    <Plus className="w-4 h-4" /> Add link
                 </button>
-              </div>
+            </div>
         </>
-    )
-    
+    );
 }
