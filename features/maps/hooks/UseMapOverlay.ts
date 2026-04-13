@@ -8,8 +8,9 @@ export function useMapOverlay({ onConfirm, onClose }: UseMapOverlayOptions): Use
 
   async function handleLocationSelect(lat: number, lng: number) {
     setGeocoding(true);
-    const { barangay, fullAddress } = await reverseGeocode(lat, lng);
-    setLocation({ lat, lng, barangay, fullAddress });
+    const { barangay, fullAddress, isInBaybay } = await reverseGeocode(lat, lng);
+    console.log("Geocoding result:", { lat, lng, barangay, fullAddress, isInBaybay });
+    setLocation({ lat, lng, barangay, fullAddress, isInBaybay  });
     setGeocoding(false);
   }
 

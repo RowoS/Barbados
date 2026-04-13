@@ -45,6 +45,12 @@ export default function MapOverlay({ onClose, onConfirm }: UseMapOverlayOptions)
           ) : (
             <p className="text-gray-400 text-sm">Click on the map to pin your store location</p>
           )}
+
+          {location && !location.isInBaybay && (
+            <p className="text-red-500 text-xs mt-1">
+              Warning: The selected location is outside of Baybay City. Please select a location within the city limits.
+            </p>
+          )}
         </div>
 
         {/* Map */}
@@ -62,7 +68,7 @@ export default function MapOverlay({ onClose, onConfirm }: UseMapOverlayOptions)
           </button>
           <button
             onClick={handleConfirm}
-            disabled={!location || geocoding}
+            disabled={!location || geocoding || !location.isInBaybay}
             className="px-6 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg transition-colors flex items-center gap-2"
           >
             Confirm Location

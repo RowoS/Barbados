@@ -1,3 +1,13 @@
+import * as L from 'leaflet';
+
+declare module 'leaflet' {
+  interface GeoJSONOptions {
+    invert?: boolean;
+  }
+}
+
+
+
 export interface ConfirmedLocation {
   geolocation: {
     latitude: number;
@@ -11,6 +21,7 @@ export interface LocationInfo {
   lng: number;
   barangay: string | null;
   fullAddress: string | null;
+  isInBaybay: boolean;
 }
 
 export interface UseMapOverlayReturn {
@@ -28,6 +39,7 @@ export interface UseMapOverlayOptions {
 export interface GeocodeResult {
   barangay: string | null;
   fullAddress: string | null;
+  isInBaybay: boolean;
 }
 
 export interface UseLocationPickerOptions {
