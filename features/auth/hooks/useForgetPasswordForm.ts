@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { forgetPassword } from "../lib/auth-actions";
-import { useAsyncForm } from "./useAsyncForm";
+import { useAsyncForm } from "@/features/shared/hooks/useAsyncForm";
 import { isValidEmail } from "@/features/auth/lib/validators";
 
 export function useForgetPasswordForm() {

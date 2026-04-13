@@ -1,5 +1,5 @@
 import { LoginWithGoogle } from "../lib/auth-actions";
-import { useAsyncForm } from "./useAsyncForm";
+import { useAsyncForm } from "@/features/shared/hooks/useAsyncForm";
 
 
 export function GoogleButtonLogic(nextRoute: string) {

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { LogOutUser } from "@/features/vendor/libs/vendor-actions";
-import { useAsyncForm } from "@/features/vendor/hooks/useAsyncForm";
+import { useAsyncForm } from "@/features/shared/hooks/useAsyncForm";
 import { useState } from "react";
 
 export function useVendorNavBar() {

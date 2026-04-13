@@ -8,18 +8,21 @@ export async function reverseGeocode(lat: number, lng: number): Promise<GeocodeR
     );
     const data = await res.json();
     const addr = data.address ?? {};
- 
+
     const barangay =
       addr.village ??
       addr.suburb ??
       addr.neighbourhood ??
       addr.quarter ??
       null;
- 
+
     const fullAddress = data.display_name ?? null;
- 
-    return { barangay, fullAddress };
+
+    const city = addr.city ?? addr.town ?? addr.municipality ?? addr.county ?? "";
+    const isInBaybay = city.toLowerCase().includes("baybay");
+
+    return { barangay, fullAddress, isInBaybay };
   } catch {
-    return { barangay: null, fullAddress: null };
+    return { barangay: null, fullAddress: null, isInBaybay: false };
   }
 }

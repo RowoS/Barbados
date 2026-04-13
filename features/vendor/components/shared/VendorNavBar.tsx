@@ -62,7 +62,7 @@ export default function VendorNavBar() {
         </div>
       </div>
 
-      {openRestaurantProfile && (<ProfileOverlay email="test@gmail.com" onClose={() => setOpenRestaurantProfile(false)} />)}
+      {openRestaurantProfile && (<ProfileOverlay onClose={() => setOpenRestaurantProfile(false)} />)}
     </header>
   );
 }

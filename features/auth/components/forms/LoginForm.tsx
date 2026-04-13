@@ -11,6 +11,7 @@ import { useLoginForm } from "@/features/auth/hooks/useLoginForm";
 import { Mail, Lock, Eye, EyeOff, Smartphone } from "lucide-react";
 import EmailVerificationModal from "../modals/EmailConfirmationModal";
 import EmailVerifiedModal from "../modals/EmailVerifiedModal";
+import TOTPForm from "../modals/TOTPModal";
 
 
 export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => {
@@ -21,7 +22,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
     globalSuccess,
     fieldErrors,
     isLoading,
-
+    submitTotp,
     submit,
     handleForgotPassword,
     clearFieldError,
@@ -31,6 +32,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
   const { email, password, rememberMe } = values;
   const { setEmail, setPassword, setRememberMe } = setters;
   const [showPassword, setShowPassword] = useState(false);
+  const [totpCode, setTotpCode] = useState("");
 
 
   return (
@@ -84,141 +86,146 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
             </div>
           )}
 
-          {/* Form */}
-          <div className="bg-white rounded-3xl shadow-xl p-8">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                submit();
-              }}
-              className="space-y-6"
-            >
-              {/* Email */}
-              <InputField
-                id="email"
-                type="email"
-                label="Email Address"
-                value={email}
-                placeholder="Enter your email"
-                icon={<Mail className="w-5 h-5" />}
-                error={fieldErrors.email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  clearFieldError("email");
+          {!values.requiresMFA ? (
+            <div className="bg-white rounded-3xl shadow-xl p-8">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  submit();
                 }}
-              />
+                className="space-y-6"
+              >
+                {/* Email */}
+                <InputField
+                  id="email"
+                  type="email"
+                  label="Email Address"
+                  value={email}
+                  placeholder="Enter your email"
+                  icon={<Mail className="w-5 h-5" />}
+                  error={fieldErrors.email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    clearFieldError("email");
+                  }}
+                />
 
-              {/* Password */}
-              <InputField
-                id="password"
-                type={showPassword ? "text" : "password"}
-                label="Password"
-                value={password}
-                placeholder="Enter your password"
-                icon={<Lock className="w-5 h-5" />}
-                error={fieldErrors.password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  clearFieldError("password");
-                }}
-                endAdornment={
+                {/* Password */}
+                <InputField
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  label="Password"
+                  value={password}
+                  placeholder="Enter your password"
+                  icon={<Lock className="w-5 h-5" />}
+                  error={fieldErrors.password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    clearFieldError("password");
+                  }}
+                  endAdornment={
+                    <Button
+                      type="button"
+                      onClick={() => setShowPassword((v) => !v)}
+                      className="text-accent-orange bg-transparent hover:bg-transparent"
+                    >
+                      {showPassword ? (
+                        <EyeOff/>) : (<Eye/>)
+                      }
+                    </Button>
+                  }
+                />
+
+                {/* Remember / Forgot */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Checkbox className="text-accent-orange"
+                      id="remember"
+                      checked={rememberMe}
+                      onCheckedChange={(v: boolean) =>
+                        setRememberMe(v === true)
+                      }
+                    />
+                    <Label htmlFor="remember" className="text-sm cursor-pointer text-[var(--accent-black)]">
+                      Remember me
+                    </Label>
+                  </div>
+
                   <Button
                     type="button"
-                    onClick={() => setShowPassword((v) => !v)}
-                    className="text-accent-orange bg-transparent hover:bg-transparent"
+                    variant="link"
+                    onClick= {handleForgotPassword}
+                    className="text-accent-blue font-medium"
                   >
-                    {showPassword ? (
-                      <EyeOff/>) : (<Eye/>)
-                    }
+                    Forgot Password?
                   </Button>
-                }
-              />
-
-              {/* Remember / Forgot */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Checkbox className="text-accent-orange"
-                    id="remember"
-                    checked={rememberMe}
-                    onCheckedChange={(v: boolean) =>
-                      setRememberMe(v === true)
-                    }
-                  />
-                  <Label htmlFor="remember" className="text-sm cursor-pointer text-[var(--accent-black)]">
-                    Remember me
-                  </Label>
                 </div>
 
+                {/* Submit */}
                 <Button
-                  type="button"
-                  variant="link"
-                  onClick= {handleForgotPassword}
-                  className="text-accent-blue font-medium"
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-accent-orange hover:from-accent-orange hover:bg-hover-orange text-white py-3.5 rounded-xl shadow-lg"
                 >
-                  Forgot Password?
+                  {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
+              </form>
+
+              {/* Legal */}
+              <p className="text-center text-xs text-[var(--accent-black)]/60 mt-4">
+                By logging in, you agree to FoodHub&apos;s{" "}
+                <a href="/privacy-policy" className="underline font-bold text-accent-orange">
+                  Privacy Policy
+                </a>{" "}
+                &{" "}
+                <a href="/terms" className="underline font-bold text-accent-orange">
+                  Terms of Use
+                </a>
+              </p>
+
+              {/* Divider */}
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-accent-black" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white text-accent-black/60">
+                    Or continue with
+                  </span>
+                </div>
               </div>
 
-              {/* Submit */}
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-accent-orange hover:from-accent-orange hover:bg-hover-orange text-white py-3.5 rounded-xl shadow-lg"
-              >
-                {isLoading ? "Signing in..." : "Sign In"}
-              </Button>
-            </form>
+              <GoogleButton nextRoute="/dashboard" />
 
-            {/* Legal */}
-            <p className="text-center text-xs text-[var(--accent-black)]/60 mt-4">
-              By logging in, you agree to FoodHub&apos;s{" "}
-              <a href="/privacy-policy" className="underline font-bold text-accent-orange">
-                Privacy Policy
-              </a>{" "}
-              &{" "}
-              <a href="/terms" className="underline font-bold text-accent-orange">
-                Terms of Use
-              </a>
-            </p>
+              {/* Signup */}
+              <p className="mt-6 text-center text-sm text-accent-black/60">
+                Don&apos;t have an account?{" "}
+                <a
+                  href="/sign-up"
+                  className="text-accent-orange font-medium hover:underline "
+                >
+                  Create one here
+                </a>
+              </p>
 
-            {/* Divider */}
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-accent-black" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-accent-black/60">
-                  Or continue with
-                </span>
-              </div>
+              {values.showVerificationModal && email && (
+                <EmailVerificationModal
+                  email={email}
+                  onClose={() => setters.setShowVerificationModal(false)}
+                />
+              )}
+
+              {values.showVerifiedEmailModal && (
+                 <EmailVerifiedModal
+                  onClose={() => setters.setShowVerifiedEmailModal(false)}
+                />
+              )}
             </div>
-
-            <GoogleButton nextRoute="/dashboard" />
-
-            {/* Signup */}
-            <p className="mt-6 text-center text-sm text-accent-black/60">
-              Don&apos;t have an account?{" "}
-              <a
-                href="/sign-up"
-                className="text-accent-orange font-medium hover:underline "
-              >
-                Create one here
-              </a>
-            </p>
-
-            {values.showVerificationModal && email && (
-              <EmailVerificationModal
-                email={email}
-                onClose={() => setters.setShowVerificationModal(false)}
-              />
-            )}
-
-            {values.showVerifiedEmailModal && (
-               <EmailVerifiedModal
-                onClose={() => setters.setShowVerifiedEmailModal(false)}
-              />
-            )}
-          </div>
+          ) : (
+            <div className="bg-white rounded-3xl shadow-xl p-8">
+              <TOTPForm isLoading={isLoading} onSubmit={submitTotp} />
+            </div>
+          )}
         </div>
       </div>
     </div>

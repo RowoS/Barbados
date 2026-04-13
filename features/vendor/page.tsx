@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getStoreProfile } from "@/features/vendor/libs/route/route";
+import { getStoreProfile } from "@/features/shared/libs/route/route";
 import VendorDashboard from "@/features/vendor/components/VendorDashboard";
 import StoreSetupWrapper from "@/features/vendor/components/StoreSetupWrapper";
 

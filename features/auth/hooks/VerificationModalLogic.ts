@@ -1,4 +1,4 @@
-import { useAsyncForm } from "./useAsyncForm";
+import { useAsyncForm } from "@/features/shared/hooks/useAsyncForm";
 import { resendEmailConfirmation } from "../lib/auth-actions";
 
 export function VerificationModalLogic() {

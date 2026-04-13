@@ -8,7 +8,7 @@ export default function StoreSetupWrapper({ userId }: { userId: string }) {
   return (
     <StoreSetup
       userId={userId}
-      onComplete={() => router.push("/vendor")}
+      onComplete={() => router.push("/vendor/dashboard")}
     />
   );
 }
