@@ -15,12 +15,12 @@ export type SidebarMenuItemType = {
 };
 
 export const data: SidebarMenuItemType[] = [
-  { icon: Home, label: "Dashboard", href: "/dashboard" },
-  { icon: Boxes, label: "Catalog", href: "/dashboard/catalog" },
-  { icon: List, label: "Orders", href: "/dashboard/orders" },
-  { icon: Coffee, label: "Menu", href: "/dashboard/menu" },
-  { icon: Star, label: "Reviews", href: "/dashboard/reviews" },
-  { icon: MessageCircle, label: "Messages", href: "/dashboard/messages" },
+  { icon: Home, label: "Dashboard", href: "/vendor/dashboard" },
+  { icon: Boxes, label: "Catalog", href: "/vendor/catalog" },
+  { icon: List, label: "Orders", href: "/vendor/orders" },
+  { icon: Coffee, label: "Menu", href: "/vendor/menu" },
+  { icon: Star, label: "Reviews", href: "/vendor/reviews" },
+  { icon: MessageCircle, label: "Messages", href: "/vendor/messages" },
 ];
 
 export interface StoreFormData {
