@@ -6,7 +6,7 @@ import NavBar from "@/shared/components/NavBar";
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
-      <NavBar/>
+      <NavBar />
       <Hero />
       <Features />
       <Footer />
