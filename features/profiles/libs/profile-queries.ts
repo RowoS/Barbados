@@ -17,6 +17,8 @@ export async function getStoreInfo() {
         throw new Error(response.error.message);
     }
 
+    console.log("Fetched store info:", response.data);
+
     return {
         ...response.data,
     };
