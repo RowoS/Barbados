@@ -9,5 +9,5 @@ export default async function VendorPage() {
   if (!userId) redirect("/login");
   if (!hasStore) return <StoreSetupWrapper userId={userId} />;
 
-  return <VendorDashboard />;
+  return <VendorDashboard/>;
 }

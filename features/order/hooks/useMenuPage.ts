@@ -3,12 +3,15 @@
 import { useState } from "react";
 import { MenuLogic } from "./MenuLogic";
 import { useProfile } from "@/features/profiles/hooks/ProfileLogic";
+import { MenuItem } from "../types/types";
 
 export function useMenuPage() {
     const { values } = useProfile();
     const storeId = values.storeInfo?.id ?? "";
     const menu = MenuLogic(storeId);
     const [isModalOpen, setModalOpen] = useState(false);
+    const [editingItemId, setEditingItemId] = useState<string | null>(null);
+    const [editFields, setEditFields] = useState<{ name: string; description: string; price: string; image: string }>({ name: "", description: "", price: "", image: "" });
     const [isCategoryModalOpen, setCategoryModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [activeTab, setActiveTab] = useState("All");
@@ -20,6 +23,26 @@ export function useMenuPage() {
         )
     }));
 
+    const handleStartEdit = (item: MenuItem) => {
+        setEditingItemId(item.id);
+        setEditFields({
+            name: item.name,
+            description: item.description ?? "",
+            price: String(item.price),
+            image: item.image ?? "",
+        });
+    };
+
+    const handleSaveEdit = async (categoryId: string, itemId: string) => {
+        await menu.functions.handleUpdateItem(categoryId, itemId, {
+            name: editFields.name,
+            description: editFields.description || undefined,
+            price: Number(editFields.price),
+            image: editFields.image || undefined,
+        });
+        setEditingItemId(null);
+    };
+
     const tabs = ["All", ...menu.values.categories.map(c => c.name)];
 
     const visibleCategories = activeTab === "All"
@@ -27,8 +50,8 @@ export function useMenuPage() {
         : filteredCategories.filter(c => c.name === activeTab);
 
     return {
-        data: { storeId, isModalOpen, isCategoryModalOpen, searchQuery, activeTab, tabs },
-        Menufunctions: { setSearchQuery, setActiveTab, setModalOpen, setCategoryModalOpen },
+        data: { storeId, isModalOpen, isCategoryModalOpen, searchQuery, activeTab, tabs, editingItemId, editFields },
+        Menufunctions: { setSearchQuery, setActiveTab, setModalOpen, setCategoryModalOpen, setEditingItemId, setEditFields, handleSaveEdit, handleStartEdit },
         categories: visibleCategories,
         ...menu
     };

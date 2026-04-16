@@ -48,6 +48,7 @@
             name?: string;
             description?: string;
             price?: number;
+            image?: string;
             is_available?: boolean;
         }) => {
             await run(async () => {

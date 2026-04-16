@@ -11,7 +11,7 @@ export default function VendorCatalog() {
 
       <SidebarInset>
         <VendorNavBar />
-          <main className="pt-25">
+          <main className="pt-25" >
             <CatalogPage/>
           </main>
       </SidebarInset>
