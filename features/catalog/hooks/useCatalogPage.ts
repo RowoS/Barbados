@@ -5,7 +5,7 @@ import { MenuLogic } from "./MenuLogic";
 import { useProfile } from "@/features/profiles/hooks/ProfileLogic";
 import { MenuItem } from "../types/types";
 
-export function useMenuPage() {
+export function useCatalogPage() {
     const { values } = useProfile();
     const storeId = values.storeInfo?.id ?? "";
     const menu = MenuLogic(storeId);

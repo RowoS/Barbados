@@ -1,7 +1,7 @@
 "use client";
 
 import { Search, Plus, Edit, ToggleLeft, ToggleRight, Trash2, FolderPlus, Pencil } from "lucide-react";
-import { useMenuPage } from "../hooks/useMenuPage";
+import { useCatalogPage } from "../hooks/useCatalogPage";
 import ProductFormModal from "../components/AddProductModal";
 import AddCategoryModal from "../components/AddCategoryModal";
 
@@ -13,7 +13,7 @@ export default function CatalogPage() {
         Menufunctions: { setSearchQuery, setActiveTab, setModalOpen, setCategoryModalOpen, setEditingItemId, setEditFields, handleSaveEdit, handleStartEdit },
         categories: visibleCategories,
         ...menu
-    } = useMenuPage();
+    } = useCatalogPage();
 
     return (
         <div className="size-full flex flex-col">

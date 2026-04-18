@@ -1,4 +1,4 @@
-import CatalogPage from "@/features/order/components/page";
+import CatalogPage from "@/features/catalog/vendor/CatalogPage";
 import { SidebarInset, SidebarProvider } from "@/shared/ui/sidebar";
 import VendorNavBar from "@/features/vendor/components/shared/VendorNavBar";
 import VendorSidebar from "@/features/vendor/components/shared/VendorSideBar";
