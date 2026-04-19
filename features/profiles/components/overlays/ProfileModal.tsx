@@ -23,8 +23,12 @@ export default function ProfileOverlay({onClose }: ProfileOverlayProps) {
           <ProfileDetails
             accountName={values.storeInfo?.store_name ?? "Loading..."}
             description={values.storeInfo?.store_description?? ""}
+            openingTime={values.storeInfo?.opening_time}
+            closingTime={values.storeInfo?.closing_time}
             onAccountNameChange={functions.handleStoreNameChange}
             onDescriptionChange={functions.handleDescriptionChange}
+            onOpeningTimeChange={functions.handleOpeningTimeChange}
+            onClosingTimeChange={functions.handleClosingTimeChange}
           />
           <TabBar tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
 
@@ -38,6 +42,7 @@ export default function ProfileOverlay({onClose }: ProfileOverlayProps) {
                 onAddPhone={functions.handleAddPhone}
                 onAccountChange={functions.handleAccountChange}
                 onAccountRemove={functions.handleAccountRemove}
+                onDeliveryOptionChange={functions.handleDeliveryOptionChange}
               />
             )}
             {values.showMap && (<MapOverlay 

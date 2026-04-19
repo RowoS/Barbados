@@ -1,11 +1,14 @@
-import { Pencil, Check, X } from "lucide-react"; 
+import { Pencil, Check, X, Clock } from "lucide-react"; 
 import { ProfileDetailsProps } from "@/features/profiles/types/types";
 import { useState } from "react";
 
-export function ProfileDetails({ accountName, description, onAccountNameChange, onDescriptionChange }: ProfileDetailsProps) {
+export function ProfileDetails({ accountName, description, openingTime, closingTime,
+  onAccountNameChange, onDescriptionChange, onOpeningTimeChange, onClosingTimeChange, }: ProfileDetailsProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [nameValue, setNameValue] = useState(accountName);
   const [descValue, setDescValue] = useState(description);
+  const [openingValue, setOpeningValue] = useState(openingTime ?? "");
+  const [closingValue, setClosingValue] = useState(closingTime ?? "");
   const [nameError, setNameError] = useState("");
 
   const handleConfirm = () => {
@@ -13,14 +16,15 @@ export function ProfileDetails({ accountName, description, onAccountNameChange, 
       setNameError("Account name cannot be empty.");
       return;
     }
-
-    if(nameValue.length < 8) {
+    if (nameValue.length < 8) {
       setNameError("Account name must be at least 8 characters.");
       return;
     }
-    
+
     onAccountNameChange?.(nameValue);
     onDescriptionChange?.(descValue);
+    onOpeningTimeChange?.(openingValue);
+    onClosingTimeChange?.(closingValue);
     setNameError("");
     setIsEditing(false);
   };
@@ -28,8 +32,20 @@ export function ProfileDetails({ accountName, description, onAccountNameChange, 
   const handleCancel = () => {
     setNameValue(accountName);
     setDescValue(description);
+    setOpeningValue(openingTime ?? "");
+    setClosingValue(closingTime ?? "");
     setNameError("");
     setIsEditing(false);
+  };
+
+  const formatTime = (time: string | null | undefined) => {
+    if (!time) return "Not set";
+    const [hourStr, minuteStr] = time.split(":");
+    const hour = parseInt(hourStr);
+    const minute = minuteStr;
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+    return `${displayHour}:${minute} ${ampm}`;
   };
 
   return (
@@ -49,10 +65,17 @@ export function ProfileDetails({ accountName, description, onAccountNameChange, 
               <Pencil className="w-4 h-4" />
             </button>
           </div>
-          <p className="text-gray-400">{description || "No description set"}</p>
+          <p className="text-gray-400 mb-3">{description || "No description set"}</p>
+          
+          {/* Hours display */}
+          <div className="flex items-center gap-2 text-sm text-gray-400">
+            <Clock className="w-3.5 h-3.5" />
+            <span>{formatTime(openingTime)} – {formatTime(closingTime)}</span>
+          </div>
         </>
       ) : (
         <div className="flex flex-col gap-3">
+          {/* Name row */}
           <div className="flex items-center gap-3">
             <div className="flex flex-col flex-1">
               <input
@@ -79,6 +102,8 @@ export function ProfileDetails({ accountName, description, onAccountNameChange, 
               </button>
             </div>
           </div>
+
+          {/* Description */}
           <textarea
             value={descValue}
             onChange={(e) => setDescValue(e.target.value)}
@@ -86,6 +111,32 @@ export function ProfileDetails({ accountName, description, onAccountNameChange, 
             placeholder="Store description (optional)"
             rows={2}
           />
+
+          {/* Opening / Closing time */}
+          <div className="flex items-center gap-3">
+            <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <div className="flex items-center gap-2 flex-1">
+              <div className="flex flex-col flex-1">
+                <label className="text-xs text-gray-500 mb-1">Opening time</label>
+                <input
+                  type="time"
+                  value={openingValue}
+                  onChange={(e) => setOpeningValue(e.target.value)}
+                  className="bg-[#1D1D1D] text-gray-300 px-3 py-1.5 rounded-lg outline-none focus:ring-1 focus:ring-purple-500 text-sm"
+                />
+              </div>
+              <span className="text-gray-600 mt-4">–</span>
+              <div className="flex flex-col flex-1">
+                <label className="text-xs text-gray-500 mb-1">Closing time</label>
+                <input
+                  type="time"
+                  value={closingValue}
+                  onChange={(e) => setClosingValue(e.target.value)}
+                  className="bg-[#1D1D1D] text-gray-300 px-3 py-1.5 rounded-lg outline-none focus:ring-1 focus:ring-purple-500 text-sm"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
