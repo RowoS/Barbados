@@ -3,19 +3,14 @@
 import { ShoppingBag, Upload, X, MapPin, Phone, Mail, Clock, Store, Map} from 'lucide-react';
 import { useSetUpFormLogic } from '../../hooks/SetUpFormLogic';
 import MapOverlay from '@/features/maps/MapOverLay';
-
-interface StoreSetupProps {
-  onComplete?: () => void;
-  onSkip?: () => void;
-  userId: string;
-}
+import { StoreSetupProps } from '../../types/types';
 
 
 export default function StoreSetup({ onComplete, onSkip,userId }: StoreSetupProps) {
   
   const {
     state: { currentStep, formData, logoPreview, logoInputRef, isLoading, error, showMap },
-    setters: { handleChange, handleImageChange, clearLogo, handleNext, handleBack, handleMapSelect },
+    setters: { handleChange, handleImageChange, clearLogo, handleNext, handleBack, handleMapSelect, handleDeliveryOptionChange },
   } = useSetUpFormLogic({ userId, onComplete });
   
 
@@ -220,7 +215,39 @@ export default function StoreSetup({ onComplete, onSkip,userId }: StoreSetupProp
                   </div>
                 </div>
               </div>
+
+              <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Delivery Options <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex items-center gap-3">
+                      {(["Pick-up", "Food-Delivery", "both"] as const).map(option => {
+                          const isSelected = formData.deliveryOptions === option;
+                          const label = option === "Food-Delivery" ? "Food Delivery" : option === "both" ? "Both" : "Pick-up";
+                          return (
+                              <button
+                                  key={option}
+                                  type="button"
+                                  onClick={() => handleDeliveryOptionChange(option)}
+                                  className={`flex items-center gap-2 px-4 py-2.5 rounded-full border transition-colors text-sm font-medium ${
+                                      isSelected
+                                          ? "bg-[#FF6B35] border-[#FF6B35] text-white"
+                                          : "bg-white border-gray-300 text-gray-600 hover:border-[#FF6B35] hover:text-[#FF6B35]"
+                                  }`}
+                              >
+                                  <div className={`w-2.5 h-2.5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
+                                      isSelected ? "border-white" : "border-gray-400"
+                                  }`}>
+                                      {isSelected && <div className="w-1 h-1 rounded-full bg-white" />}
+                                  </div>
+                                  {label}
+                              </button>
+                          );
+                      })}
+                  </div>
+              </div>
             </div>
+
           )}
 
           {error && (

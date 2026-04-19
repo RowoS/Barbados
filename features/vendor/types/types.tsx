@@ -14,6 +14,8 @@ export type SidebarMenuItemType = {
   href: string;
 };
 
+export type DeliveryOption = "Pick-up" | "Food-Delivery" | "both";
+
 export const data: SidebarMenuItemType[] = [
   { icon: Home, label: "Dashboard", href: "/vendor/dashboard" },
   { icon: Boxes, label: "Catalog", href: "/vendor/catalog" },
@@ -32,6 +34,7 @@ export interface StoreFormData {
   closingTime: string;
   latitude: number | null; 
   longitude: number | null;
+  deliveryOptions: DeliveryOption;
 }
  
 export const INITIAL_FORM: StoreFormData = {
@@ -42,10 +45,13 @@ export const INITIAL_FORM: StoreFormData = {
   openingTime: '',
   closingTime: '',
   latitude: null, 
-  longitude: null, 
+  longitude: null,
+  deliveryOptions: 'Pick-up',
 };
+
 
 export interface StoreSetupProps {
   onComplete?: () => void;
+  onSkip?: () => void;
   userId: string;
 }

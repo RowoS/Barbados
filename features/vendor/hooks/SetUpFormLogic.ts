@@ -4,7 +4,7 @@ import { useAsyncForm } from "@/features/shared/hooks/useAsyncForm";
 import { useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ConfirmedLocation } from "@/features/maps/types/types";
-import { StoreFormData, INITIAL_FORM, StoreSetupProps } from "../types/types";
+import { StoreFormData, INITIAL_FORM, StoreSetupProps, DeliveryOption } from '../types/types';
 
 
 const MAX_SIZE_MB = 1;
@@ -20,6 +20,8 @@ export function useSetUpFormLogic( { userId, onComplete }: StoreSetupProps) {
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
     const logoInputRef = useRef<HTMLInputElement>(null);
     const [showMap, setShowMap] = useState(false);
+
+    
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -64,6 +66,10 @@ export function useSetUpFormLogic( { userId, onComplete }: StoreSetupProps) {
     
         const { data } = supabase.storage.from('store_assets').getPublicUrl(path);
         return data.publicUrl;
+    };
+
+    const handleDeliveryOptionChange = (value: DeliveryOption) => {
+        setFormData(prev => ({ ...prev, deliveryOptions: value }));
     };
 
     const handleNext = () => {
@@ -113,6 +119,7 @@ export function useSetUpFormLogic( { userId, onComplete }: StoreSetupProps) {
             address: formData.address,
             opening_time: formData.openingTime || null,
             closing_time: formData.closingTime || null,
+            delivery_options: formData.deliveryOptions
         });
 
         if (dbError) {
@@ -126,6 +133,6 @@ export function useSetUpFormLogic( { userId, onComplete }: StoreSetupProps) {
     
     return {
         state: { currentStep, formData, logoPreview, logoInputRef, isLoading, error, showMap },
-        setters: { handleChange, handleImageChange, clearLogo, handleNext, handleBack, handleMapSelect },
+        setters: { handleChange, handleImageChange, clearLogo, handleNext, handleBack, handleMapSelect, handleDeliveryOptionChange},
     };
 }
