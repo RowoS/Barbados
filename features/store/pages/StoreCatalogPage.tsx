@@ -51,8 +51,8 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
                     </span>
                 )}
             </button>
-
-            <CartDrawer
+            
+            {isCartOpen && (<CartDrawer
                 isOpen={isCartOpen}
                 onClose={() => setIsCartOpen(false)}
                 items={cart.items}
@@ -62,7 +62,7 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
                 onRemoveItem={cart.removeItem}
                 onClearCart={cart.clearCart}
                 storeName={storeInfo.name}
-            />
+            />)}
         </div>
     );
 }
