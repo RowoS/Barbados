@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { LogOutUser } from "@/features/vendor/libs/vendor-actions";
+import { LogOutUser } from "@/features/shared/libs/shared-actions"
 import { useAsyncForm } from "@/features/shared/hooks/useAsyncForm";
 import { useState } from "react";
 
