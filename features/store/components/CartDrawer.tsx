@@ -12,7 +12,6 @@ export default function CartDrawer({
     total,
     count,
     onUpdateQty,
-    onRemoveItem,
     onClearCart,
     onCheckout,
     storeName,
