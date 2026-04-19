@@ -53,6 +53,9 @@ export async function updateStoreInfo(updatedInfo: {
     connected_accounts?: string[];
     latitude?: number;
     longitude?: number;
+    closing_time?: string,
+    opening_time?: string,
+    delivery_options?: "Pick-up" | "Food-Delivery" | "both";
 }) {
     const supabase = createClient();
 

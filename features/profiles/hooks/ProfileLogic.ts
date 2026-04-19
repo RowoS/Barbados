@@ -6,6 +6,7 @@ import { getStoreInfo } from "../libs/profile-queries";
 import { useState, useEffect } from "react";
 import { ConfirmedLocation } from "@/features/maps/types/types";
 import { StoreInfo } from "../types/types";
+import { Underdog } from "next/font/google";
 
 
 export function useProfile() {
@@ -104,6 +105,15 @@ export function useProfile() {
         });
     };
 
+
+    const handleOpeningTimeChange = (value: string) => {
+        setStoreInfo(prev => prev ? { ...prev, opening_time: value } : prev);
+    };
+
+    const handleClosingTimeChange = (value: string) => {
+        setStoreInfo(prev => prev ? { ...prev, closing_time: value } : prev);
+    };
+
     const handleAccountRemove = (index: number) => {
         setStoreInfo(prev => {
         if (!prev) return prev;
@@ -160,6 +170,10 @@ export function useProfile() {
         });
     };
 
+    const handleDeliveryOptionChange = (value: "Pick-up" | "Food-Delivery" | "both") => {
+        setStoreInfo(prev => prev ? { ...prev, delivery_options: value } : prev);
+    };
+
     const SaveChanges = async () => {
         if (!storeInfo?.id) return;
         await run(async () => {
@@ -171,7 +185,9 @@ export function useProfile() {
                 address: storeInfo.address ?? undefined,
                 phone_numbers: storeInfo.phone_numbers ?? undefined,
                 connected_accounts: storeInfo.connected_accounts ?? undefined,
-                // only include coordinates if a new location was confirmed
+                delivery_options: storeInfo.delivery_options ?? undefined,
+                closing_time: storeInfo.closing_time?? undefined,
+                opening_time: storeInfo.opening_time?? undefined,
                 ...(storeLocation && {
                     latitude: storeLocation.geolocation.latitude,
                     longitude: storeLocation.geolocation.longitude,
@@ -186,6 +202,7 @@ export function useProfile() {
         functions: {setError, setSuccess, showMapOverlay, handleLocationConfirm, handlePhoneChange, 
             handlePhoneRemove, handleAddPhone, handleAccountChange, 
             handleAccountRemove, handleDescriptionChange, handleStoreNameChange, handleLogoUpdate, 
-            handleLogoRemove, handleUpdatePassword, handleEnroll2FA, handleVerify2FA, handleDisable2FA, SaveChanges}
+            handleLogoRemove, handleUpdatePassword, handleEnroll2FA, handleVerify2FA, handleDisable2FA,
+            handleDeliveryOptionChange,handleClosingTimeChange, handleOpeningTimeChange, SaveChanges}
     };
 }

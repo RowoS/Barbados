@@ -1,9 +1,15 @@
 import { User, Plus, X, Link2} from 'lucide-react';
-import { StoreInfo, StoreDetailsTabProps } from '../../types/types';
+import { StoreDetailsTabProps, DeliveryOption } from '../../types/types';
 import { getBrandIcon } from "../../libs/brand-icons";
 
+const deliveryOptions: { value: DeliveryOption; label: string }[] = [
+    { value: "Pick-up",       label: "Pick-up" },
+    { value: "Food-Delivery", label: "Food Delivery" },
+    { value: "both",          label: "Both" },
+];
 
-export default function StoreDetailsTab({ storeInfo, onUpdateLocation, onAddPhone, onPhoneChange, onPhoneRemove , onAccountChange, onAccountRemove}: StoreDetailsTabProps) {
+
+export default function StoreDetailsTab({ storeInfo, onUpdateLocation, onAddPhone, onPhoneChange, onPhoneRemove , onAccountChange, onAccountRemove, onDeliveryOptionChange}: StoreDetailsTabProps) {
     return (
         <>
             <div>
@@ -31,6 +37,33 @@ export default function StoreDetailsTab({ storeInfo, onUpdateLocation, onAddPhon
                     <button onClick={onUpdateLocation} className="bg-[#3D3D3D] hover:bg-[#4D4D4D] text-white px-4 py-2 rounded-lg transition-colors">
                         Update Store Location
                     </button>
+                </div>
+            </div>
+
+            <div>
+                <h3 className="text-white mb-3">Delivery options</h3>
+                <div className="flex items-center gap-3">
+                    {deliveryOptions.map(option => {
+                        const isSelected = storeInfo?.delivery_options === option.value;
+                        return (
+                            <button
+                                key={option.value}
+                                onClick={() => onDeliveryOptionChange(option.value)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-colors text-sm font-medium ${
+                                    isSelected
+                                        ? "bg-purple-600 border-purple-600 text-white"
+                                        : "bg-transparent border-gray-600 text-gray-400 hover:border-gray-400 hover:text-gray-300"
+                                }`}
+                            >
+                                <div className={`w-2.5 h-2.5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                    isSelected ? "border-white" : "border-gray-500"
+                                }`}>
+                                    {isSelected && <div className="w-1 h-1 rounded-full bg-white" />}
+                                </div>
+                                {option.label}
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
 
