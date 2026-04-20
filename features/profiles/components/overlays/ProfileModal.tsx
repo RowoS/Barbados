@@ -15,7 +15,6 @@ export default function ProfileOverlay({onClose }: ProfileOverlayProps) {
   const [activeTab, setActiveTab] = useState("Store Details");
   const { values, functions,} = useProfile();
   
-  console.log("Rendering ProfileOverlay with storeInfo:", values.storeInfo);
   return (
     <>
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">

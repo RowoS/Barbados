@@ -42,3 +42,32 @@ export type DeliveryOption = "Pick-up" | "Food-Delivery" | "both";
 export interface ProfileOverlayProps {
   onClose: () => void;
 }
+
+export type Address = {
+    id: string;
+    customer_id: string;
+    landmark: string;
+    barangay: string;
+    city: string;
+    coordinates: string;
+};
+
+export type Barangay = {
+    id: string;
+    barangay: string;
+    city: string;
+};
+
+export type NewAddress = {
+    landmark: string;
+    barangay: string;
+    latitude: number;
+    longitude: number;
+};
+
+export const EMPTY_FORM: NewAddress = {
+    landmark: "",
+    barangay: "",
+    latitude: 0,
+    longitude: 0,
+};

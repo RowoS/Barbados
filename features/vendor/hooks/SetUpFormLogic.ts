@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ConfirmedLocation } from "@/features/maps/types/types";
 import { StoreFormData, INITIAL_FORM, StoreSetupProps, DeliveryOption } from '../types/types';
-
+import { createStore } from "../libs/vendor-actions";
 
 const MAX_SIZE_MB = 1;
 
@@ -90,44 +90,33 @@ export function useSetUpFormLogic( { userId, onComplete }: StoreSetupProps) {
     };
     
     const handleBack = () => {
-        setError(null);
-        setCurrentStep(1);
-    };
-    
+            setError(null);
+            setCurrentStep(1);
+        };
+        
     const handleSubmit = async () => {
-        console.log('📋 formData on submit:', formData)  // ← here
-        console.log('📍 coordinates:', formData.latitude, formData.longitude)
-        console.log('📬 address:', formData.address)
         let logoUrl: string | null = null;
 
         if (logoFile) {
             logoUrl = await uploadImage(logoFile, `${userId}/logo-${Date.now()}`);
         }
 
-    
-
-    const { error: dbError } = await supabase.from('stores').insert({
+        await createStore({
             id: userId,
             store_name: formData.storeName,
             store_description: formData.storeDescription || null,
             store_logo: logoUrl,
             store_coordinates:
-            formData.latitude != null && formData.longitude != null
-                ? `POINT(${formData.longitude} ${formData.latitude})`
-                : null,
+                formData.latitude != null && formData.longitude != null
+                    ? `POINT(${formData.longitude} ${formData.latitude})`
+                    : null,
             phone_numbers: [formData.phone],
             address: formData.address,
             opening_time: formData.openingTime || null,
             closing_time: formData.closingTime || null,
-            delivery_options: formData.deliveryOptions
+            delivery_options: formData.deliveryOptions,
         });
 
-        if (dbError) {
-            console.error('❌ DB Error:', dbError.message)
-            console.error('❌ DB Details:', dbError.details)
-            console.error('❌ DB Hint:', dbError.hint)
-            throw dbError
-        }
         onComplete?.();
     };
     
