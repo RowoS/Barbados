@@ -6,7 +6,7 @@ interface TabBarProps {
 
 export default function TabBar({ tabs, activeTab, onTabChange }: TabBarProps) {
     return (
-        <div className="px-8 border-b border-gray-700">
+        <div className="px-8 border-b border-gray-700 pt-10">
           <div className="flex gap-8">
             {tabs.map((tab) => (
               <button
