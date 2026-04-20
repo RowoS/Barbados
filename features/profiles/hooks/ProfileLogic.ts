@@ -6,7 +6,6 @@ import { getStoreInfo } from "../libs/profile-queries";
 import { useState, useEffect } from "react";
 import { ConfirmedLocation } from "@/features/maps/types/types";
 import { StoreInfo } from "../types/types";
-import { Underdog } from "next/font/google";
 
 
 export function useProfile() {

@@ -4,8 +4,6 @@ import { useProfile } from "@/features/profiles/hooks/ProfileLogic";
 
 export default function SecurityTab() {
     const { values, functions} = useProfile();
-
-    const [newEmail, setNewEmail] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [totpCode, setTotpCode] = useState("");
     const [lastChanged, setLastChanged] = useState<string | null>(null);
@@ -32,10 +30,6 @@ export default function SecurityTab() {
 
     return (
         <>
-            {/* Feedback */}
-            {values.error && <p className="text-red-400 text-sm">{values.error}</p>}
-            {values.success && <p className="text-green-400 text-sm">{values.success}</p>}
-
             {/* Password */}
             <div>
                 <h3 className="text-white mb-1 flex items-center gap-2">
