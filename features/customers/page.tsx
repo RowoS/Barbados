@@ -5,16 +5,16 @@ import { useState} from "react";
 import { useAllCarts } from "@/features/store/hooks/getAllCarts";
 import { useFavorites } from "./hooks/useFavorites";
 import { usePageTab } from "./hooks/usePageTabs";
+import CustomerNavBar from "./components/CustomerNavBar";
 import CartsView from "./components/CartView";
 import TabBar from "./components/TabBar";
 import StoreCard from "./components/storeCards";
 import SearchTab from "./components/SearchTab";
-import dynamic from "next/dynamic";
-
-const BaybayMaps = dynamic(() => import("@/features/maps/components/index"), { ssr: false });
+import StoreMap from "./components/StoreMaps";
 
 export default function StorePage(){
     const { activeTab, setActiveTab } = usePageTab();
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
     const { favorites, toggleFavorite } = useFavorites();
     const { cartsByStore, isLoading: cartsLoading, totalItems } = useAllCarts();
     const [hoveredStoreId, setHoveredStoreId] = useState<string | null>(null);
@@ -26,14 +26,15 @@ export default function StorePage(){
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="max-w-7xl mx-auto px-4 py-6 md:px-6">
-
-                <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
-                    <div className="h-48 md:h-64">
-                        <BaybayMaps stores={storeMarkers} highlightedStoreId={hoveredStoreId} />
-                    </div>
+            <CustomerNavBar onProfileOpenChange={setIsProfileOpen}/>
+            <main className="max-w-7xl mx-auto px-4 py-6 md:px-6 pt-20">
+                <div>
+                    <StoreMap
+                    stores={storeMarkers}
+                    highlightedStoreId={hoveredStoreId}
+                    hidden={isProfileOpen}
+                    />
                 </div>
-
                 <TabBar
                     activeTab={activeTab}
                     onChange={setActiveTab}

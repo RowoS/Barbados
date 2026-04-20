@@ -57,4 +57,8 @@ export type CartsViewProps = {
     totalItems: number;
 };
 
+export interface CustomerNavBarProps {
+    onProfileOpenChange?: (open: boolean) => void;
+}
+
 export const barangayCache = { data: null as Barangay[] | null };
