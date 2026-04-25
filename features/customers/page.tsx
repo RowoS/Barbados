@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearch } from "@/features/customers/hooks/useSearch";
-import { useState} from "react";
-import { useAllCarts } from "@/features/store/hooks/getAllCarts";
+import { act, useState} from "react";
+import { useAllCarts } from "@/features/customers/hooks/useCartSection";
 import { useFavorites } from "./hooks/useFavorites";
 import { usePageTab } from "./hooks/usePageTabs";
 import CustomerNavBar from "./components/CustomerNavBar";
@@ -16,7 +16,7 @@ export default function StorePage(){
     const { activeTab, setActiveTab } = usePageTab();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const { favorites, toggleFavorite } = useFavorites();
-    const { cartsByStore, isLoading: cartsLoading, totalItems } = useAllCarts();
+    const {cart_values, cart_functions} = useAllCarts(); 
     const [hoveredStoreId, setHoveredStoreId] = useState<string | null>(null);
     const { values, functions } = useSearch();
 
@@ -32,7 +32,7 @@ export default function StorePage(){
                     <StoreMap
                     stores={storeMarkers}
                     highlightedStoreId={hoveredStoreId}
-                    hidden={isProfileOpen}
+                    hidden={isProfileOpen || activeTab !== "shops"}
                     />
                 </div>
                 <TabBar
@@ -80,9 +80,11 @@ export default function StorePage(){
 
                 {activeTab === "cart" && (
                     <CartsView
-                        cartsByStore={cartsByStore}
-                        isLoading={cartsLoading}
-                        totalItems={totalItems}
+                        cartsByStore={cart_values.cartsByStore}
+                        isLoading={cart_values.isLoading}
+                        totalItems={cart_values.totalItems}
+                        onUpdateQty={cart_functions.updateItemQty}
+                        onRemoveItem={cart_functions.removeItem}
                     />
                 )}
             </main>

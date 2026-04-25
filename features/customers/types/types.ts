@@ -1,5 +1,3 @@
-import { CartByStore } from "@/features/store/types/types";
-
 export type Barangay = {
     id: string;
     barangay: string;
@@ -55,10 +53,49 @@ export type CartsViewProps = {
     cartsByStore: CartByStore[];
     isLoading: boolean;
     totalItems: number;
+    onUpdateQty: (cartItemId: string, cartId: string, qty: number) => void;
+    onRemoveItem: (cartItemId: string, cartId: string) => void;
 };
 
 export interface CustomerNavBarProps {
     onProfileOpenChange?: (open: boolean) => void;
+}
+
+export type CartByStore = {
+    store_id: string;
+    cart_id: string;
+    store_name: string;
+    items: AllCartItem[];
+    subtotal: number;
+};
+
+export type AllCartItem = {
+    id: string;
+    cart_id: string;
+    item_id: string;
+    name: string;
+    price: number;
+    image: string | null;
+    quantity: number;
+    store_id: string;
+    store_name: string;
+};
+ 
+export interface CheckoutModalProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    cart: CartByStore;
+}
+
+export enum FulfillmentType {
+    pickup, 
+    delivery
+}
+
+export enum delivery_methods {
+    pickup = "Pick-up",
+    delivery = "Food-Delivery",
+    both = "both"
 }
 
 export const barangayCache = { data: null as Barangay[] | null };

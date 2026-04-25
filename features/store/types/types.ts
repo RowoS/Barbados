@@ -63,21 +63,4 @@ export interface CartDrawerProps {
     storeName?: string;
 }
 
-export type AllCartItem = {
-    id: string;
-    cart_id: string;
-    item_id: string;
-    name: string;
-    price: number;
-    image: string | null;
-    quantity: number;
-    store_id: string;
-    store_name: string;
-};
- 
-export type CartByStore = {
-    store_id: string;
-    store_name: string;
-    items: AllCartItem[];
-    subtotal: number;
-};
+
