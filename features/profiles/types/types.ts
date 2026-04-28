@@ -49,7 +49,9 @@ export type Address = {
     landmark: string;
     barangay: string;
     city: string;
-    coordinates: string;
+    latitude: number | null;
+    longitude: number | null;
+    
 };
 
 export type Barangay = {

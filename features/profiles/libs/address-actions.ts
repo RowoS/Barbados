@@ -10,11 +10,7 @@ export async function getAddresses(): Promise<Address[]> {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) throw new Error("Not authenticated");
 
-    const { data, error } = await supabase
-        .from("addresses")
-        .select("*")
-        .eq("customer_id", user.id)
-        .order("city", { ascending: true });
+    const { data, error } = await supabase.rpc("get_customer_addresses");
 
     if (error) throw new Error(`Failed to fetch addresses: ${error.message}`);
     return data ?? [];
