@@ -2,6 +2,7 @@ import { Clock, ChevronDown, MapPinned, ListFilter, List } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useVendorOrders } from '../hooks/useOrderPage';
 import { OrderMap } from './OrderMapComponent';
+import { statusBadgeClass, statusDotClass, getStatusOptions } from '../libs/order_Status';
 
 export function VendorsOrdersPage() {
   const { values, functions } = useVendorOrders();
@@ -45,40 +46,6 @@ export function VendorsOrdersPage() {
       address: addressStr,
     });
   }
-
-  const statusBadgeClass = (status: string) => {
-    switch (status) {
-      case 'confirmed':
-      case 'stand_by':     return 'bg-orange-100 text-orange-600 border border-orange-300';
-      case 'preparing':    return 'bg-blue-100 text-blue-700 border border-blue-300';
-      case 'out_for_delivery':     
-      case 'ready_for_pickup': return 'bg-green-100 text-green-700 border border-green-300';
-      case 'completed':    return 'bg-emerald-100 text-emerald-700 border border-emerald-300';
-      case 'cancelled':    return 'bg-red-100 text-red-500 border border-red-300';
-      default:             return 'bg-stone-100 text-stone-500 border border-stone-300';
-    }
-  };
-
-  const statusDotClass = (status: string) => {
-    switch (status) {
-      case 'confirmed':    return 'bg-orange-400';
-      case 'stand_by':     return 'bg-orange-400';
-      case 'preparing':    return 'bg-blue-400';
-      case 'out_for_delivery':
-      case 'ready_for_pickup': return 'bg-green-500';
-      default:             return 'bg-stone-400';
-    }
-  };
-
-  const STATUS_OPTIONS = (fulfillment: string) => [
-    { value: 'confirmed', label: 'Confirmed' },
-    { value: 'stand_by', label: 'Stand By' },
-    { value: 'preparing', label: 'Preparing' },
-    { 
-      value: fulfillment === 'delivery' ? 'out_for_delivery' : 'ready_for_pickup', 
-      label: fulfillment === 'delivery' ? 'Out for Delivery' : 'Ready for Pickup' 
-    },
-  ];
 
   return (
     <div className="min-h-screen p-8" style={{ background: '#FAF7F4', fontFamily: "'DM Sans', sans-serif" }}>
@@ -178,7 +145,7 @@ export function VendorsOrdersPage() {
 
                   {openMenu === order.order_id && (
                     <div className="absolute right-0 top-10 bg-white border border-stone-200 rounded-xl shadow-lg z-10 min-w-[190px] overflow-hidden">
-                      {STATUS_OPTIONS(order.fulfillment).map((opt, i) => (
+                      {getStatusOptions(order.fulfillment).map((opt, i) => (
                         <button
                           key={opt.value}
                           onClick={() => {
