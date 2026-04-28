@@ -1,7 +1,7 @@
 'use client';
 
 import { createClient } from "@/lib/supabase/client";
-import { VendorOrder } from "../types/types";
+import { VendorOrder, CustomerOrder } from "../types/types";
 
 export async function getVendorOrders(): Promise<VendorOrder[]> {
     const supabase = createClient();
@@ -25,6 +25,16 @@ export async function confirmOrder(orderId: string): Promise<void> {
     if (error) throw new Error(`Failed to confirm order: ${error.message}`);
 }
 
+export async function getCustomerOrders(): Promise<CustomerOrder[]> {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("get_customer_orders");
+    if (error) throw new Error(`Failed to fetch customer orders: ${error.message}`);
+    return (data ?? []).map((order: any) => ({
+        ...order,
+        items: typeof order.items === "string" ? JSON.parse(order.items) : order.items ?? [],
+    }));
+}
+
 export async function cancelOrder(orderId: string, reason?: string): Promise<void> {
     const supabase = createClient();
     const { error } = await supabase
@@ -36,6 +46,21 @@ export async function cancelOrder(orderId: string, reason?: string): Promise<voi
         })
         .eq("id", orderId);
     if (error) throw new Error(`Failed to cancel order: ${error.message}`);
+}
+
+export async function confirmReceived(orderId: string): Promise<void> {
+    const supabase = createClient();
+    
+    const { error } = await supabase
+        .from("orders")
+        .update({
+            status: "completed",
+            completed_at: new Date().toISOString(),
+        })
+        .eq("id", orderId);
+    if (error) throw new Error(`Failed to confirm receipt of order: ${error.message}`);
+
+    return;
 }
 
 export async function updateOrderStatus(

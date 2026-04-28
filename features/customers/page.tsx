@@ -11,8 +11,9 @@ import TabBar from "./components/TabBar";
 import StoreCard from "./components/storeCards";
 import SearchTab from "./components/SearchTab";
 import StoreMap from "./components/StoreMaps";
+import { CustomerOrdersSection } from "../order/components/CustomerOrderSection";
 
-export default function StorePage(){
+export default function CustomerHomePage(){
     const { activeTab, setActiveTab } = usePageTab();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const { favorites, toggleFavorite } = useFavorites();
@@ -73,9 +74,7 @@ export default function StorePage(){
                 )}
 
                 {activeTab === "delivery" && (
-                    <div className="text-center py-12">
-                        <p className="text-gray-500">No active deliveries</p>
-                    </div>
+                    <CustomerOrdersSection />
                 )}
 
                 {activeTab === "cart" && (
