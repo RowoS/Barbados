@@ -4,6 +4,7 @@
 import { Clock, MapPinned, ChevronDown, ListFilter } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { OrderMap } from './OrderMapComponent';
+import { ReviewModal } from '../../reviews/components/ReviewModal';
 import { useCustomerOrders } from '../hooks/useCustomerOrders';
 import { statusBadgeClass, statusDotClass} from '../libs/order_Status';
 import { CustomerOrder } from '../types/types';
@@ -12,6 +13,7 @@ export function CustomerOrdersSection() {
   const { values, functions } = useCustomerOrders();
   const { visibleOrders, counts, isLoading, error, activeTab, cancellingId, cancelReason } = values;
   const { setActiveTab, cancelOrder, confirmReceived, setCancellingId, setCancelReason, statusLabel } = functions;
+  const [reviewOrder, setReviewOrder] = useState<CustomerOrder | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mapOverlay, setMapOverlay] = useState<{ lat: number; lng: number; address: string } | null>(null);
 
@@ -106,10 +108,9 @@ export function CustomerOrdersSection() {
                 </div>
               </div>
 
-              {(activeTab === 'all' || activeTab === 'to_receive') && (
+              {activeTab !== 'history' && (
                 <div className="relative menu-btn-wrap">
-
-                {cancellingId === order.order_id ? (
+                  {cancellingId === order.order_id ? (
                   <div className="flex items-center gap-2">
                     <input
                       value={cancelReason}
@@ -171,9 +172,22 @@ export function CustomerOrdersSection() {
                       </div>
                     )}
                   </>
+                )}
+                </div>
               )}
-            </div>
-            )}
+              
+              {activeTab === 'history' && order.status === 'completed' && (
+                <button
+                  onClick={() => setReviewOrder(order)}
+                  className="flex items-center gap-1.5 px-3 py-2 border border-stone-200 rounded-lg text-xs font-medium text-stone-600 hover:bg-stone-50 transition-colors"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  {order.review_id ? 'Edit Review' : 'Leave a Review'}
+                </button>
+              )}
+
             </div>
 
             <div className="flex flex-col divide-y divide-stone-100">
@@ -250,6 +264,14 @@ export function CustomerOrdersSection() {
           lat={mapOverlay.lat}
           lng={mapOverlay.lng}
           address={mapOverlay.address}
+        />
+      )}
+
+      {reviewOrder && (
+        <ReviewModal
+          order={reviewOrder}
+          onClose={() => setReviewOrder(null)}
+          onSubmitted={() => { setReviewOrder(null); }}
         />
       )}
     </div>
