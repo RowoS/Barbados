@@ -1,83 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { getOrderReview, submitOrderReview, deleteOrderReview } from '../libs/review-actions';
-import { CustomerOrder } from '../types/types';
+import { useReviewModal } from '../hooks/useReviewModal';
+import { CustomerOrder, ReviewModalProps} from '../types/types';
 
-interface Props {
-  order: CustomerOrder;
-  onClose: () => void;
-  onSubmitted: () => void;
-}
-
-export function ReviewModal({ order, onClose, onSubmitted }: Props) {
-  const [rating, setRating]       = useState(0);
-  const [hovered, setHovered]     = useState(0);
-  const [review, setReview]       = useState('');
-  const [reviewId, setReviewId]   = useState<string | null>(null);
-  const [isLoading, setLoading]   = useState(true);
-  const [isSubmitting, setSubmitting] = useState(false);
-  const [error, setError]         = useState<string | null>(null);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const data = await getOrderReview(order.order_id);
-        if (data?.review_id) {
-          setReviewId(data.review_id);
-          setRating(data.rating ?? 0);
-          setReview(data.review ?? '');
-        }
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, [order.order_id]);
-
-  async function handleSubmit() {
-    if (rating === 0) { setError('Please select a rating.'); return; }
-    setSubmitting(true);
-    setError(null);
-    try {
-      await submitOrderReview({
-        order_id:  order.order_id,
-        store_id:  order.store_id,
-        rating,
-        review:    review.trim() || undefined,
-      });
-      onSubmitted();
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  async function handleDelete() {
-    if (!reviewId) return;
-    setSubmitting(true);
-    try {
-      await deleteOrderReview(reviewId);
-      onSubmitted();
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  function handleBackdrop(e: React.MouseEvent) {
-    if (e.target === e.currentTarget) onClose();
-  }
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') onClose(); }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose]);
+export function ReviewModal({ order, onClose, onSubmitted }: ReviewModalProps) {
+  const { values, functions } = useReviewModal(order, onClose, onSubmitted);
+  const { rating, hovered, review, reviewId, isLoading, isSubmitting, error, ratingLabel } = values;
+  const { setRating, setHovered, setReview, handleSubmit, handleDelete, handleBackdrop } = functions;
 
   return (
     <div
@@ -89,7 +18,7 @@ export function ReviewModal({ order, onClose, onSubmitted }: Props) {
         className="bg-white rounded-2xl p-6 flex flex-col gap-4"
         style={{ width: 'min(440px, 100%)', fontFamily: "'DM Sans', sans-serif" }}
       >
-
+        {/* Header */}
         <div className="flex items-start justify-between">
           <div>
             <p className="text-sm font-semibold text-stone-800">Rate your experience</p>
@@ -109,7 +38,7 @@ export function ReviewModal({ order, onClose, onSubmitted }: Props) {
           <p className="text-stone-400 text-sm text-center py-6">Loading...</p>
         ) : (
           <>
-
+            {/* Stars */}
             <div className="flex items-center justify-center gap-2 py-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -131,10 +60,10 @@ export function ReviewModal({ order, onClose, onSubmitted }: Props) {
               ))}
             </div>
 
-            <p className="text-center text-xs text-stone-400 -mt-2">
-              {['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][hovered || rating] ?? ''}
-            </p>
+            {/* Rating label */}
+            <p className="text-center text-xs text-stone-400 -mt-2">{ratingLabel}</p>
 
+            {/* Review text */}
             <textarea
               value={review}
               onChange={(e) => setReview(e.target.value)}
@@ -145,12 +74,13 @@ export function ReviewModal({ order, onClose, onSubmitted }: Props) {
 
             {error && <p className="text-xs text-red-500">{error}</p>}
 
+            {/* Actions */}
             <div className="flex items-center justify-between gap-2 pt-1">
               {reviewId && (
                 <button
                   onClick={handleDelete}
                   disabled={isSubmitting}
-                  className="text-xs text-red-400 hover:text-red-500 transition-colors"
+                  className="text-xs text-red-400 hover:text-red-500 transition-colors disabled:opacity-50"
                 >
                   Delete review
                 </button>

@@ -33,3 +33,9 @@ export type CustomerOrder = {
     review_id: string | null;
     items: OrderItem[];
 }
+
+export interface ReviewModalProps {
+  order: CustomerOrder;
+  onClose: () => void;
+  onSubmitted: () => void;
+}
