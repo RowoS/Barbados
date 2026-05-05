@@ -39,3 +39,40 @@ export interface ReviewModalProps {
   onClose: () => void;
   onSubmitted: () => void;
 }
+
+export type StoreReview = {
+  review_id: string;
+  order_id: string;
+  rating: 1 | 2 | 3 | 4 | 5;
+  review: string | null;
+  created_at: string;
+  username: string;
+  avatar_url: string | null;
+};
+
+export type StoreReviewsMeta = {
+  reviews: StoreReview[] | null;
+  average_rating: number | null;
+  rating_count: number | null;
+};
+
+
+export type UseStoreReviewsReturn = {
+  reviews: StoreReview[];
+  averageRating: number | null;
+  ratingCount: number | null;
+  filteredReviews: StoreReview[];
+  visibleReviews: StoreReview[];
+  filter: ReviewFilter;
+  search: string;
+  isLoading: boolean;
+  error: string | null;
+  showAll: boolean;
+  remainingCount: number;
+  setFilter: (filter: ReviewFilter) => void;
+  setSearch: (search: string) => void;
+  expandAll: () => void;
+  refetch: () => void;
+};
+
+export type ReviewFilter = "all" | "1" | "2" | "3" | "4" | "5";

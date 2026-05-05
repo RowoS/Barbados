@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client';
+import { StoreReviewsMeta } from '../types/types';
 
 export async function getOrderReview(orderId: string) {
     const supabase = createClient();
@@ -36,4 +37,21 @@ export async function deleteOrderReview(reviewId: string) {
         .delete()
         .eq('id', reviewId);
     if (error) throw new Error(error.message);
+}
+
+export async function getStoreReviews(): Promise<StoreReviewsMeta | null> {
+    const supabase = createClient();
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError) throw new Error(`Auth error: ${authError.message}`);
+
+    const { data, error } = await supabase.rpc('get_store_reviews_with_meta', { 
+            p_store_id: user?.id 
+        });
+    
+    if (error) throw new Error(error.message);
+    
+
+    return data ?? null;
 }
