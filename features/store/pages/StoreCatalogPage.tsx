@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useStorePage } from "../hooks/useStorePage";
 import { ShoppingCart } from "lucide-react";
 import StoreHeader from "../components/StoreHeader";
+import StoreReviewsSection from "../components/StoreReviewSection";
 import MenuGrid from "../components/MenuGrid";
 import CartDrawer from "../components/CartDrawer";
 
@@ -24,6 +25,7 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
                         name={storeInfo.name ?? "Unknown Store"}
                         logo={storeInfo.logo ?? "https://via.placeholder.com/150"}
                         description={storeInfo.description ?? "No description available."}
+                        rating={storeInfo.rating ?? null}
                     />
                     <MenuGrid
                         categories={categories}
@@ -37,6 +39,7 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
                             cart.addItem(item);
                         }}
                     />
+                    <StoreReviewsSection storeId={storeId} /> 
                 </div>
             </div>
 
