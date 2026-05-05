@@ -13,6 +13,7 @@ export type StoreInfo = {
     delivery_options: "Pick-up" | "Food-Delivery" | "both" | null;
     closing_time: string | null;
     opening_time: string | null;
+    average_rating: number | null;
 }
 
 export interface StoreDetailsTabProps {

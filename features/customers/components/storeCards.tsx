@@ -1,5 +1,5 @@
-import Link from "next/link";  // ← next/link not next/navigation
-import { Heart, MapPin } from "lucide-react";
+import Link from "next/link";
+import { Heart, MapPin, Star } from "lucide-react";
 import { StoreCardProps } from "../types/types";
 
 export default function StoreCard({ store, isFavorite, onToggleFavorite, onHover, onLeave }: StoreCardProps) {
@@ -32,16 +32,30 @@ export default function StoreCard({ store, isFavorite, onToggleFavorite, onHover
             </div>
 
             <div className="p-4">
-                <h3 className="font-bold text-gray-900 mb-1">{store.store_name}</h3>
+                <div className="flex items-start justify-between mb-1">
+                    <h3 className="font-bold text-gray-900 line-clamp-1 flex-1">{store.store_name}</h3>
+                    
+                    {store.average_rating && store.average_rating > 0 && (
+                        <div className="flex items-center gap-1 ml-2 flex-shrink-0">
+                            <Star className="w-3.5 h-3.5 fill-[#F4D35E] text-yellow-400" />
+                            <span className="text-sm font-semibold text-gray-900">
+                                {store.average_rating.toFixed(1)}
+                            </span>
+                        </div>
+                    )}
+                </div>
+                
                 {store.store_description && (
                     <p className="text-xs text-gray-500 line-clamp-1 mb-2">{store.store_description}</p>
                 )}
+                
                 {store.address && (
                     <div className="flex items-center gap-1 mb-3">
                         <MapPin className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
                         <p className="text-xs text-gray-500 line-clamp-1">{store.address}</p>
                     </div>
                 )}
+                
                 <span className="block w-full bg-[#FF6B35] hover:bg-[#FF6B35]/90 text-white py-2 rounded-lg font-medium text-sm transition-colors text-center">
                     Go to Store
                 </span>
