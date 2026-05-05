@@ -20,7 +20,6 @@ export const data: SidebarMenuItemType[] = [
   { icon: Home, label: "Dashboard", href: "/vendor/dashboard" },
   { icon: Boxes, label: "Catalog", href: "/vendor/catalog" },
   { icon: List, label: "Orders", href: "/vendor/orders" },
-  { icon: Coffee, label: "Menu", href: "/vendor/menu" },
   { icon: Star, label: "Reviews", href: "/vendor/reviews" },
   { icon: MessageCircle, label: "Messages", href: "/vendor/messages" },
 ];

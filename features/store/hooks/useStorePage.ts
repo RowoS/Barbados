@@ -40,7 +40,7 @@ export function useStorePage(storeId: string) {
 
     return {
         categories: visibleCategories,
-        storeInfo: {name: storeInfo?.store_name, storeId: storeInfo?.id, logo: storeInfo?.store_logo, description: storeInfo?.store_description},
+        storeInfo: {name: storeInfo?.store_name, storeId: storeInfo?.id, logo: storeInfo?.store_logo, description: storeInfo?.store_description, rating: storeInfo?.average_rating},
         isLoading,
         searchQuery,
         activeTab,

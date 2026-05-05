@@ -21,13 +21,18 @@ export async function getStoresInBarangay(barangayId: string): Promise<StoreResu
 }
 
 export async function searchStoresByName(query: string): Promise<StoreResult[]> {
-    const supabase = createClient();
+    const supabase = await createClient();
+    
     const { data, error } = await supabase
-        .from("stores")
-        .select("id, store_name, store_description, store_logo, address, phone_numbers")
-        .ilike("store_name", `%${query}%`)
-        .limit(20);
+        .rpc('search_stores_with_details', { search_query: query });
 
-    if (error) throw error;
-    return data;
+    if (error) {
+        console.error("Search error:", error);
+        throw error;
+    }
+
+    return (data || []).map((store: StoreResult) => ({
+        ...store,
+        average_rating: store.average_rating ? Number(store.average_rating) : null,
+    })) as StoreResult[];
 }

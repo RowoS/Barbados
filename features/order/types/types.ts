@@ -55,6 +55,7 @@ export type CustomerOrder = {
     cancelled_at: string | null;
     completed_at: string | null;
     payment_status: string;
+    review_id: string | null;
     items: OrderItem[];
 }
 

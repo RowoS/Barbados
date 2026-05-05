@@ -15,6 +15,7 @@ export type StoreResult = {
     longitude?: number;
     barangay_id?: string;
     barangay_name?: string;
+    average_rating?: number | null;
 };
 
 export type Tab = "shops" | "delivery" | "cart";
