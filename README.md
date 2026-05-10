@@ -6,7 +6,65 @@
 |  BS.010.001     |     2026-02-27     |
 |  BS.010.002     |     2026-03-19   |
 | BS.010.003 | 2026-03-19 |
-| | |
+| BS.010.004 | 2026-04-18 |
+| BS.010.005 | 2026-04-20 |
+| BS.010.006 | 2026-04-28 |
+| BS.010.007 | 2026-05-05 |
+
+## BS.010.007 Release Notes
+ > **Review and Ratings**
+ * Added Review Modal for completed orders to leave reviews on stores
+ * Added Reviews Page for the vendor-side
+ * Modify Store Card to display the store's rating
+ * Added Store Review Section when viewing stores
+
+## BS.010.006 Release Notes
+  > **Order Page - Customer Side**
+  * Added functionality for viewing orders made
+  * Implemented cancellation and completion functionality for orders 
+  * Added "Order History" for viewing completed or cancelled orders
+  
+  > **Order Page - Vendor Side**
+  * Enable vendors to see all incoming orders placed by customers
+  * Allow vendors to decline or process placed orders
+  * Implemented "Order History" for the vendor-side
+  * Allow for viewing Delivery Location and Providing Directions 
+  
+  > ***Other Updates***
+  * Added Checkout Modal for checking out orders (currently only accepts Cash on Delivery)
+  * Deleting items or Updating Item Quantities now available in the Cart Tab
+  * Updated functions and types for the checkout modal
+
+## BS.010.005 Release Notes
+
+  > **Store Page - Customer View**
+  * Added store page view for customers to browse products from stores
+  * Added "Cart" component, allowing customers to add products from the store to a cart
+  
+  > **Customer Homepage**
+  * Added the "Store Search" functionality to the homepage
+  * Added a "Store Catalog" component to homepage for displaying results of store search
+  * Added a "Cart View" to homepage to allow customers to view products added from a store
+  * Added "Map View" for viewing store locations
+  * Implemented and added Navbar component to the homepage
+  
+  > ***Other Updates***
+  * Updated store setup to include choices for delivery method
+  * Allow vendors to update business hours and mode of delivery
+
+## BS.010.004 Release Notes
+
+  > **Store Search Functionality**
+  * Added the search function for customers to search for vendor stores
+  
+  > **Catalog Page for Vendors**
+  * Added catalog page wherein vendors can add products to their store
+  * Implemented edit functionality for products
+  
+  > ***Other Updates***
+  * Updated routing logic and imports
+  * Updated map overlay to work for Profile changes
+  * Added two-factor authentication (2FA) to Login Form
 
 ## BS.010.003 Release Notes
 
