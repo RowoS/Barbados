@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { VendorConversation } from "../types/types";
+import { VendorConversation, CustomerConversation} from "../types/types";
 
 export async function getOrCreateConversation(storeId: string) {
     const supabase = await createClient();
@@ -119,6 +119,20 @@ export async function sendMessage(conversationId: string, content: string) {
     }
     
     revalidatePath(`/customer/store/${conversationId}/chat`);
+}
+
+export async function getCustomerConversations(): Promise<CustomerConversation[]> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) throw new Error("Not authenticated");
+
+    const { data, error } = await supabase.rpc("get_customer_conversations", {
+        p_customer_id: user.id,
+    });
+
+    if (error) throw new Error(error.message);
+    return data ?? [];
 }
 
 export async function timeAgo(dateStr: string | null) {

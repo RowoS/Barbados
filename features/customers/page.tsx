@@ -1,8 +1,10 @@
 "use client";
 
 import { useSearch } from "@/features/customers/hooks/useSearch";
-import { act, useState} from "react";
+import { useState} from "react";
 import { useAllCarts } from "@/features/customers/hooks/useCartSection";
+import { CustomerOrdersSection } from "../order/components/CustomerOrderSection";
+import { CustomerChatList } from "../chat/components/CustomerChatList";
 import { useFavorites } from "./hooks/useFavorites";
 import { usePageTab } from "./hooks/usePageTabs";
 import CustomerNavBar from "./components/CustomerNavBar";
@@ -11,7 +13,6 @@ import TabBar from "./components/TabBar";
 import StoreCard from "./components/storeCards";
 import SearchTab from "./components/SearchTab";
 import StoreMap from "./components/StoreMaps";
-import { CustomerOrdersSection } from "../order/components/CustomerOrderSection";
 
 export default function CustomerHomePage(){
     const { activeTab, setActiveTab } = usePageTab();
@@ -29,13 +30,6 @@ export default function CustomerHomePage(){
         <div className="min-h-screen bg-gray-50">
             <CustomerNavBar onProfileOpenChange={setIsProfileOpen}/>
             <main className="max-w-7xl mx-auto px-4 py-6 md:px-6 pt-20">
-                <div>
-                    <StoreMap
-                    stores={storeMarkers}
-                    highlightedStoreId={hoveredStoreId}
-                    hidden={isProfileOpen || activeTab !== "shops"}
-                    />
-                </div>
                 <TabBar
                     activeTab={activeTab}
                     onChange={setActiveTab}
@@ -59,18 +53,34 @@ export default function CustomerHomePage(){
                 />
 
                 {activeTab === "shops" && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {values.stores.map(store => (
-                            <StoreCard
-                                key={store.id}
-                                store={store}
-                                isFavorite={favorites.includes(store.id)}
-                                onToggleFavorite={toggleFavorite}
-                                onHover={setHoveredStoreId}
-                                onLeave={() => setHoveredStoreId(null)}
+                    <div className="space-y-6">
+                        {/* Map Section */}
+                        <div className="w-full">
+                            <StoreMap
+                                stores={storeMarkers}
+                                highlightedStoreId={hoveredStoreId}
+                                hidden={isProfileOpen}
                             />
-                        ))}
+                        </div>
+
+                        {/* Store Results Section */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {values.stores.map(store => (
+                                <StoreCard
+                                    key={store.id}
+                                    store={store}
+                                    isFavorite={favorites.includes(store.id)}
+                                    onToggleFavorite={toggleFavorite}
+                                    onHover={setHoveredStoreId}
+                                    onLeave={() => setHoveredStoreId(null)}
+                                />
+                            ))}
+                        </div>
                     </div>
+                )}
+
+                {activeTab === "chats" && (
+                    <CustomerChatList />
                 )}
 
                 {activeTab === "delivery" && (

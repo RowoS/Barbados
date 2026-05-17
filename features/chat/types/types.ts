@@ -44,3 +44,12 @@ export type VendorConversation = {
     last_message: string | null;
     last_message_at: string | null;
 };
+
+export type CustomerConversation = {
+    conversation_id: string;
+    store_id: string;
+    store_name: string;
+    store_logo: string | null;
+    last_message: string | null;
+    last_message_at: string | null;
+};
