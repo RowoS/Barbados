@@ -1,11 +1,12 @@
 "use client";
-import {MapPin, ShoppingCart, Motorbike} from "lucide-react"
+import { MapPin, ShoppingCart, Truck, MessageSquare } from "lucide-react";
 import { Tab, TabBarProps } from "../types/types";
 
 const tabs = [
     { id: "shops" as Tab,    label: "Shops",    icon: <MapPin className="w-4 h-4" /> },
-    { id: "delivery" as Tab, label: "Delivery", icon:<Motorbike className="w-4 h-4" /> },
+    { id: "delivery" as Tab, label: "Delivery", icon: <Truck className="w-4 h-4" /> },
     { id: "cart" as Tab,     label: "Cart",     icon: <ShoppingCart className="w-4 h-4" /> },
+    { id: "chats" as Tab, label: "Chats", icon: <MessageSquare className="w-4 h-4" /> },
 ];
 
 export default function TabBar({activeTab, onChange, rightSlot}: TabBarProps){

@@ -18,7 +18,7 @@ export type StoreResult = {
     average_rating?: number | null;
 };
 
-export type Tab = "shops" | "delivery" | "cart";
+export type Tab = "shops" | "delivery" | "cart" | "chats";
 
 export type TabBarProps = {
     activeTab: Tab;
