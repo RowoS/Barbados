@@ -27,6 +27,7 @@ export interface StoreHeaderProps {
     logo: string | null;
     description: string | null;
     rating?: number | null;
+    storeId: string;
 }
 
 export interface MenuGridProps {

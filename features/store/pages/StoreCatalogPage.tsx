@@ -26,6 +26,7 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
                         logo={storeInfo.logo ?? "https://via.placeholder.com/150"}
                         description={storeInfo.description ?? "No description available."}
                         rating={storeInfo.rating ?? null}
+                        storeId={storeId}
                     />
                     <MenuGrid
                         categories={categories}
