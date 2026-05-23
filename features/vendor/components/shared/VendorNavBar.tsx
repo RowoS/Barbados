@@ -7,18 +7,21 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/dropdown-menu";
 
-import { Bell, User, UtensilsCrossed, LogOut } from "lucide-react";
+import { User, UtensilsCrossed, LogOut } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { useVendorNavBar } from "@/features/vendor/hooks/VendorNavLogic";
 import ProfileOverlay from "@/features/profiles/components/overlays/ProfileModal";
+import { NotificationsDropdown } from "@/features/notifications/components/NotificationButton";
 
 export default function VendorNavBar() {
-  const { goToRestaurantProfile, handleLogout,openRestaurantProfile, setOpenRestaurantProfile,isLoading } = useVendorNavBar();
+  const { goToRestaurantProfile, handleLogout, openRestaurantProfile, setOpenRestaurantProfile, isLoading } = useVendorNavBar();
 
   return (
     <header className="bg-accent-black fixed top-0 left-0 right-0 z-50">
-      <div className="w-full px-6 px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-6 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+
+          {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-[var(--accent-blue)] rounded-lg flex items-center justify-center">
               <UtensilsCrossed className="w-6 h-6 text-white" />
@@ -28,8 +31,8 @@ export default function VendorNavBar() {
             </span>
           </div>
 
+          {/* Right Side */}
           <div className="flex items-center gap-3">
-            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="flex items-center gap-2 bg-accent-orange hover:bg-hover-orange text-white px-5 py-2 rounded-lg">
@@ -54,15 +57,14 @@ export default function VendorNavBar() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button className="flex items-center gap-2 bg-accent-orange hover:bg-hover-orange text-black px-5 py-2 rounded-lg">
-              <Bell className="w-4 h-4" />
-            </Button>
-
+            <NotificationsDropdown />
           </div>
         </div>
       </div>
 
-      {openRestaurantProfile && (<ProfileOverlay onClose={() => setOpenRestaurantProfile(false)} />)}
+      {openRestaurantProfile && (
+        <ProfileOverlay onClose={() => setOpenRestaurantProfile(false)} />
+      )}
     </header>
   );
 }
