@@ -17,6 +17,7 @@ import StoreMap from "./components/StoreMaps";
 export default function CustomerHomePage(){
     const { activeTab, setActiveTab } = usePageTab();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { favorites, toggleFavorite } = useFavorites();
     const {cart_values, cart_functions} = useAllCarts(); 
     const [hoveredStoreId, setHoveredStoreId] = useState<string | null>(null);
@@ -26,9 +27,14 @@ export default function CustomerHomePage(){
         .filter(s => s.latitude && s.longitude)
         .map(s => ({ id: s.id, name: s.store_name, lat: s.latitude!, lng: s.longitude! }));
 
+    const isMapHidden = isProfileOpen || isDropdownOpen;
+
     return (
         <div className="min-h-screen bg-gray-50">
-            <CustomerNavBar onProfileOpenChange={setIsProfileOpen}/>
+            <CustomerNavBar 
+                onProfileOpenChange={setIsProfileOpen}
+                onDropdownOpenChange={setIsDropdownOpen}
+            />
             <main className="max-w-7xl mx-auto px-4 py-6 md:px-6 pt-20">
                 <TabBar
                     activeTab={activeTab}
@@ -54,16 +60,14 @@ export default function CustomerHomePage(){
 
                 {activeTab === "shops" && (
                     <div className="space-y-6">
-                        {/* Map Section */}
                         <div className="w-full">
                             <StoreMap
                                 stores={storeMarkers}
                                 highlightedStoreId={hoveredStoreId}
-                                hidden={isProfileOpen}
+                                hidden={isMapHidden}
                             />
                         </div>
 
-                        {/* Store Results Section */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {values.stores.map(store => (
                                 <StoreCard

@@ -7,14 +7,15 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/dropdown-menu";
 
-import { Bell, User, UtensilsCrossed, LogOut } from "lucide-react";
+import { User, UtensilsCrossed, LogOut } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import CustomerProfileOverlay from "@/features/profiles/components/overlays/CustomerProfileModal"
 import { useCustomerNavBar } from "../hooks/CustomerNavBarLogic";
 import { CustomerNavBarProps } from "../types/types";
+import { NotificationsDropdown } from "@/features/notifications/components/NotificationButton";
 
-export default function CustomerNavBar({ onProfileOpenChange }: CustomerNavBarProps) {
-  const { goToProfile,handleLogout,openProfile,setOpenProfile, isLoading} = useCustomerNavBar();
+export default function CustomerNavBar({ onProfileOpenChange, onDropdownOpenChange }: CustomerNavBarProps) {
+  const { handleLogout, openProfile, setOpenProfile, isLoading} = useCustomerNavBar();
 
    const handleSetOpenProfile = (value: boolean) => {
         setOpenProfile(value);
@@ -23,9 +24,10 @@ export default function CustomerNavBar({ onProfileOpenChange }: CustomerNavBarPr
 
   return (
     <header className="bg-accent-black fixed top-0 left-0 right-0 z-50">
-      <div className="w-full px-6 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
+
+          <div className="flex items-center gap-2 flex-shrink-0">
             <div className="w-10 h-10 bg-[var(--accent-blue)] rounded-lg flex items-center justify-center">
               <UtensilsCrossed className="w-6 h-6 text-white" />
             </div>
@@ -34,13 +36,14 @@ export default function CustomerNavBar({ onProfileOpenChange }: CustomerNavBarPr
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
+            <NotificationsDropdown onOpenChange={onDropdownOpenChange} />
             
-            <DropdownMenu>
+            <DropdownMenu onOpenChange={onDropdownOpenChange}>
               <DropdownMenuTrigger asChild>
-                <Button className="flex items-center gap-2 bg-accent-orange hover:bg-hover-orange text-white px-5 py-2 rounded-lg">
+                <Button className="flex items-center gap-2 bg-accent-orange hover:bg-hover-orange text-white px-4 md:px-5 py-2 rounded-lg">
                   <User className="w-4 h-4" />
-                  <span>Profile</span>
+                  <span className="hidden sm:inline">Profile</span>
                 </Button>
               </DropdownMenuTrigger>
 
@@ -59,11 +62,6 @@ export default function CustomerNavBar({ onProfileOpenChange }: CustomerNavBarPr
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            <Button className="flex items-center gap-2 bg-accent-orange hover:bg-hover-orange text-black px-5 py-2 rounded-lg">
-              <Bell className="w-4 h-4" />
-            </Button>
-
           </div>
         </div>
 

@@ -58,9 +58,10 @@ export type CartsViewProps = {
     onRemoveItem: (cartItemId: string, cartId: string) => void;
 };
 
-export interface CustomerNavBarProps {
-    onProfileOpenChange?: (open: boolean) => void;
-}
+export type CustomerNavBarProps = {
+    onProfileOpenChange?: (value: boolean) => void;
+    onDropdownOpenChange?: (value: boolean) => void;
+};
 
 export type CartByStore = {
     store_id: string;
