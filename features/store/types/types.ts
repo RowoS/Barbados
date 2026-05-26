@@ -1,3 +1,5 @@
+
+
 export type MenuVariant = {
     id: string;
     name: string;
@@ -28,6 +30,8 @@ export interface StoreHeaderProps {
     description: string | null;
     rating?: number | null;
     storeId: string;
+    onSubmitReport: (reason: ReportReason, notes: string, storeId: string) => Promise<void>;
+    isSubmittingReport: boolean;
 }
 
 export interface MenuGridProps {
@@ -41,6 +45,7 @@ export interface MenuGridProps {
     onAddToCart: (item: MenuItem) => void;
 }
 
+
 export type CartItem = {
     id: string;
     cart_id: string;
@@ -50,6 +55,8 @@ export type CartItem = {
     image: string | null;
     quantity: number;
 };
+
+
 
 export interface CartDrawerProps {
     isOpen: boolean;
@@ -81,5 +88,27 @@ export type StoreReviewsMeta = {
 };
 
 export type ReviewFilter = "all" | "1" | "2" | "3" | "4" | "5";
+
+export type Report = {
+    storeId: string;
+    reason: ReportReason;
+    notes?: string | null;
+}
+
+export enum ReportReason {
+    Scam = "Scam or Fraudulent Activity",
+    SellingRestrictedItems = "Selling Restricted or Illegal Items",
+    FakeListings = "Fake or Misleading Listings",
+    Harassment = "Harassment or Inappropriate Behavior",
+    HealthSafety = "Health and Safety Violations",
+};
+
+export interface ReportStoreModalProps {
+    storeId: string;
+    storeName: string;
+    onClose: () => void;
+    onSubmit: (reason: ReportReason, notes: string, storeId: string) => Promise<void>;
+    isSubmitting: boolean;
+}
 
 

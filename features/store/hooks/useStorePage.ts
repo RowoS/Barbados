@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { getStoreInfo, getStoreMenu } from "../libs/store-actions";
-import { MenuCategory } from "../types/types";
+import {submitStoreReport} from "../libs/report-actions"; 
+import { MenuCategory, ReportReason } from "../types/types";
 import { useCart } from "./useCart";
 import { StoreInfo } from "@/features/profiles/types/types";
 
@@ -11,6 +12,7 @@ export function useStorePage(storeId: string) {
     const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
+    const [submittingReport, setSubmitReport] = useState(false);
     const [activeTab, setActiveTab] = useState("All");
     const cart = useCart(storeId);
 
@@ -26,6 +28,20 @@ export function useStorePage(storeId: string) {
             .then((data) => setStoreInfo(data))
             .catch(() => console.error("Failed to load store information"));
     }, [storeId]);
+
+    const submitReport = async (reason: ReportReason, notes: string) => {
+        if (!storeId) throw new Error("Store ID is required");
+        if (!reason) return;
+
+        setSubmitReport(true);
+        try {
+            await submitStoreReport({ storeId, reason, notes });
+        } catch (error) {
+            console.error("Failed to submit report", error);
+        } finally {
+            setSubmitReport(false);
+        }
+    };
 
     const tabs = ["All", ...categories.map(c => c.name)];
 
@@ -45,8 +61,11 @@ export function useStorePage(storeId: string) {
         searchQuery,
         activeTab,
         tabs,
+        submittingReport,
+        cart,
         setSearchQuery,
         setActiveTab,
-        cart,
+        submitReport,
+        setSubmitReport,
     };
 }
