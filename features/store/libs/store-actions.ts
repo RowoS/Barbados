@@ -22,8 +22,8 @@ export async function getStoreInfo(storeId: string) {
 
     console.log("getStoreInfo response:", response);
 
-    if (response.error) {
-        throw new Error(response.error.message);
+    if (response.error || !response.data) {
+        throw new Error("Store not found");
     }
 
     return {
