@@ -15,6 +15,7 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
         categories, isLoading, searchQuery, activeTab, tabs,
         storeInfo,
         setSearchQuery, setActiveTab, cart,
+        submitReport, submittingReport,
     } = useStorePage(storeId);
 
     return (
@@ -27,6 +28,8 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
                         description={storeInfo.description ?? "No description available."}
                         rating={storeInfo.rating ?? null}
                         storeId={storeId}
+                        onSubmitReport={submitReport}
+                        isSubmittingReport={submittingReport}
                     />
                     <MenuGrid
                         categories={categories}

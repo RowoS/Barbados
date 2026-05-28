@@ -9,7 +9,6 @@ export async function handleOAuthCallback(
   const error = url.searchParams.get('error')
   const origin = url.origin
 
-  // Handle OAuth errors first
   if (error) {
     console.error('OAuth error in callback:', {
       error,
@@ -60,8 +59,15 @@ export async function handleOAuthCallback(
       return { type: 'error', fallback: `${origin}/error` }
     }
 
-    const hasNoRole = !profile?.role || profile.role === 'new'
-    const redirectPath = hasNoRole ? '/sign-up/role-select' : '/dashboard'
+    let redirectPath = '/sign-up/role-select'
+
+    if (profile?.role === 'customer') {
+      redirectPath = '/customer'
+    } else if (profile?.role === 'vendor') {
+      redirectPath = '/vendor/dashboard'
+    } else if (!profile?.role || profile.role === 'new') {
+      redirectPath = '/sign-up/role-select'
+    }
 
     return {
       type: 'redirect',
