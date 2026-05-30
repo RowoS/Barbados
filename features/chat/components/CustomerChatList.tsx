@@ -58,7 +58,7 @@ export function CustomerChatList() {
                         {values.conversations.map((conversation) => (
                             <div
                                 key={conversation.conversation_id}
-                                onClick={() => router.push(`/customer/store/${conversation.store_id}/chat`)}
+                                onClick={() => router.push(`/customer/store/${conversation.store_id}/chat?from=conversations`)}
                                 className="p-6 hover:bg-gray-50 cursor-pointer transition-colors group"
                             >
                                 <div className="flex items-center gap-4">

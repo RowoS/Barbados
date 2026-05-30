@@ -17,7 +17,7 @@ export default function StoreHeader({ name, logo, description, rating, storeId, 
                     <h1 className="text-xl font-bold text-gray-900">{name}</h1>
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <button
-                            onClick={() => router.push(`/customer/store/${storeId}/chat`)}
+                            onClick={() => router.push(`/customer/store/${storeId}/chat?from=store`)}
                             className="flex items-center gap-2 px-4 py-2 border border-gray-500 text-gray-700 hover:border-orange-500 hover:text-green-600 hover:bg-orange-50 rounded-xl text-sm font-medium transition-all duration-200"
                         >
                             <MessageCircle className="w-4 h-4" />

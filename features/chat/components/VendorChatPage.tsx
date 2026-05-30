@@ -15,6 +15,8 @@ export async function VendorChatPage({ params }: { params: Promise<{ conversatio
         .eq("id", conversationId)
         .single();
 
+    
+
     const customerName = (data?.profiles as any)?.username ?? "Customer";
 
     return (
@@ -23,6 +25,7 @@ export async function VendorChatPage({ params }: { params: Promise<{ conversatio
                 conversationId={conversationId}
                 currentUserId={user.id}
                 storeName={customerName}
+                backUrl="/vendor/messages"
             />
         </div>
     );

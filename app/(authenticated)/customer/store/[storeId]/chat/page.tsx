@@ -1,5 +1,5 @@
-import ChatPage from "@/features/chat/components/ChatPage";
+import ChatPage from "@/features/chat/components/CustomerChatPage";
 
-export default function Page({ params }: { params: Promise<{ storeId: string }> }) {
-    return <ChatPage params={params} />;
+export default function Page({ params, searchParams }: { params: Promise<{ storeId: string }>, searchParams: Promise<{ from?: string }> }) {
+    return <ChatPage params={params} searchParams={searchParams} />;
 }
