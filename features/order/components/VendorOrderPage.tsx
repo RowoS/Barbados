@@ -1,273 +1,293 @@
-import { Clock, ChevronDown, MapPinned, ListFilter, List } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+"use client";
+
+import { Clock, ChevronDown, MapPinned, ListFilter, Eye } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/shared/ui/table";
 import { useVendorOrders } from '../hooks/useOrderPage';
 import { OrderMap } from './OrderMapComponent';
 import { statusBadgeClass, statusDotClass, getStatusOptions } from '../libs/order_Status';
+import { OrderItemsModal } from './OrderItemModal';
+import { VendorOrderActionsModal } from './VendorOrderActionsModal';
 
 export function VendorsOrdersPage() {
-  const { values, functions } = useVendorOrders();
-  const { visibleOrders, isLoading, error, activeTab, counts, cancellingId, cancelReason } = values;
-  const { setActiveTab, handleConfirm, handleDecline, handleStatusUpdate,
-    setCancellingId, setCancelReason, statusLabel } = functions;
+    const { values, functions } = useVendorOrders();
+    const { visibleOrders, isLoading, error, activeTab, counts, cancelReason } = values;
+    const { setActiveTab, handleConfirm, handleDecline, handleStatusUpdate,
+        setCancellingId, setCancelReason, statusLabel } = functions;
 
-  const [mapOverlay, setMapOverlay] = useState<{
-    lat: number;
-    lng: number;
-    address: string;
-  } | null>(null);
+    const [mapOverlay, setMapOverlay] = useState<{ lat: number; lng: number; address: string } | null>(null);
+    const [selectedOrderForActions, setSelectedOrderForActions] = useState<typeof visibleOrders[0] | null>(null);
+    const [selectedOrderForItems, setSelectedOrderForItems] = useState<typeof visibleOrders[0] | null>(null);
 
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (!(e.target as Element).closest('.menu-btn-wrap')) {
-        setOpenMenu(null);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  function openMap(order: typeof visibleOrders[0]) {
-    if (!order.latitude || !order.longitude) {
-      setMapOverlay({
-        lat: 10.6769,
-        lng: 124.8006,
-        address: "Location not available",
-      });
-      return;
+    function openMap(order: typeof visibleOrders[0]) {
+        if (!order.latitude || !order.longitude) {
+            setMapOverlay({ lat: 10.6769, lng: 124.8006, address: "Location not available" });
+            return;
+        }
+        setMapOverlay({
+            lat: order.latitude,
+            lng: order.longitude,
+            address: `${order.delivery_landmark}, ${order.delivery_barangay}, ${order.delivery_city}`,
+        });
     }
 
-    const addressStr = `${order.delivery_landmark}, ${order.delivery_barangay}, ${order.delivery_city}`;
+    return (
+        <div className="p-8" style={{ fontFamily: "'DM Sans', sans-serif" }}>
 
-    setMapOverlay({
-      lat: order.latitude,
-      lng: order.longitude,
-      address: addressStr,
-    });
-  }
-
-  return (
-    <div className="min-h-screen p-8" style={{ background: '#FAF7F4', fontFamily: "'DM Sans', sans-serif" }}>
-      {/* Tab Bar */}
-      <div className="flex items-center gap-2.5 mb-6 flex-wrap">
-        <button
-          onClick={() => setActiveTab('request')}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-sm font-medium transition-all ${
-            activeTab === 'request'
-              ? 'bg-orange-500 border-orange-500 text-white'
-              : 'bg-transparent border-stone-300 text-stone-500 hover:bg-stone-100'
-          }`}
-        >
-          <Clock size={13} />
-          Order Request
-          {counts.request > 0 && (
-            <span className="ml-0.5 bg-white text-orange-500 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-              {counts.request}
-            </span>
-          )}
-        </button>
-
-        <button
-          onClick={() => setActiveTab('running')}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-sm font-medium transition-all ${
-            activeTab === 'running'
-              ? 'bg-orange-500 border-orange-500 text-white'
-              : 'bg-transparent border-stone-300 text-stone-500 hover:bg-stone-100'
-          }`}
-        >
-          Running Orders
-          {counts.running > 0 && (
-            <span className="ml-0.5 bg-white text-orange-500 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-              {counts.running}
-            </span>
-          )}
-        </button>
-
-        <button
-          onClick={() => setActiveTab('history')}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-sm font-medium transition-all ${
-            activeTab === 'history'
-              ? 'bg-orange-500 border-orange-500 text-white'
-              : 'bg-transparent border-stone-300 text-stone-500 hover:bg-stone-100'
-          }`}
-        >
-          Order History
-        </button>
-
-        <button className="ml-auto flex items-center gap-1.5 px-4 py-2 rounded-full border border-stone-300 bg-white text-sm font-medium text-stone-500 hover:bg-stone-50">
-          <ListFilter size={13} />
-          Sort
-          <ChevronDown size={12} />
-        </button>
-      </div>
-
-      {isLoading && <p className="text-stone-400 text-sm text-center py-12">Loading orders...</p>}
-      {error && <p className="text-red-400 text-sm text-center py-12">{error}</p>}
-
-      <div className="space-y-4">
-        {!isLoading && visibleOrders.map((order) => (
-          <div key={order.order_id} className="bg-white rounded-2xl p-6 border border-stone-100 shadow-sm">
-            <div className="flex items-start justify-between mb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-full bg-slate-300 flex items-center justify-center overflow-hidden flex-shrink-0">
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-stone-800 mb-0.5">
-                    {order.customer_name ?? `Customer`}
-                  </p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs text-stone-400">Order #{order.order_id.slice(0, 8)}</span>
-                    {activeTab === 'request' && (
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                        order.fulfillment === 'delivery' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'
-                      }`}>
-                        {order.fulfillment === 'delivery' ? 'Delivery' : 'Pick-up'}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[11px] text-stone-400 mt-0.5">
-                    {new Date(order.created_at).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-
-              {activeTab === 'running' && (
-                <div className="relative menu-btn-wrap">
-                  <button
-                    onClick={() => setOpenMenu(openMenu === order.order_id ? null : order.order_id)}
-                    className="border border-stone-200 rounded-lg w-10 h-10 flex flex-col items-center justify-center gap-1 hover:bg-stone-50 transition-colors"
-                  >
-                    <span className="w-1 h-1 bg-stone-500 rounded-full" />
-                        ≣
-                    <span className="w-1 h-1 bg-stone-500 rounded-full" />
-                  </button>
-
-                  {openMenu === order.order_id && (
-                    <div className="absolute right-0 top-10 bg-white border border-stone-200 rounded-xl shadow-lg z-10 min-w-[190px] overflow-hidden">
-                      {getStatusOptions(order.fulfillment).map((opt, i) => (
+            {/* Tab Bar */}
+            <div className="flex items-center gap-2 mb-6 flex-wrap">
+                <div className="inline-flex rounded-md shadow-sm" role="group">
+                    {([
+                        { key: 'request', label: 'Order Requests', count: counts.request },
+                        { key: 'running', label: 'Running Orders', count: counts.running },
+                        { key: 'history', label: 'Order History',  count: null },
+                    ] as const).map((tab, index) => (
                         <button
-                          key={opt.value}
-                          onClick={() => {
-                            handleStatusUpdate(order.order_id, opt.value as any);
-                            setOpenMenu(null);
-                          }}
-                          className={`block w-full text-left px-4 py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-50 transition-colors ${
-                            i > 0 ? 'border-t border-stone-100' : ''
-                          }`}
+                            key={tab.key}
+                            onClick={() => setActiveTab(tab.key)}
+                            className={`relative flex items-center gap-1.5 px-5 py-2 text-sm font-medium transition-all ${
+                                index === 0 ? 'rounded-l-md' : ''
+                            } ${
+                                index === 2 ? 'rounded-r-md' : ''
+                            } border ${
+                                activeTab === tab.key
+                                    ? 'z-10 bg-orange-500 border-orange-500 text-white'
+                                    : 'bg-white border-stone-300 text-stone-500 hover:bg-stone-50'
+                            }`}
                         >
-                          {opt.label}
+                            {tab.key === 'request' && <Clock size={13} />}
+                            {tab.label}
+                            {tab.count != null && tab.count > 0 && (
+                                <span className={`ml-0.5 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center ${
+                                    activeTab === tab.key
+                                        ? 'bg-white text-orange-500'
+                                        : 'bg-orange-500 text-white'
+                                }`}>
+                                    {tab.count}
+                                </span>
+                            )}
                         </button>
-                      ))}
-                    </div>
-                  )}
+                    ))}
                 </div>
-              )}
 
-              {activeTab === 'request' && (
-                cancellingId === order.order_id ? (
-                  <div className="flex items-center gap-2">
-                    <input
-                      value={cancelReason}
-                      onChange={(e) => setCancelReason(e.target.value)}
-                      placeholder="Reason (optional)"
-                      className="px-3 py-1.5 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-orange-400 w-44"
-                    />
-                    <button
-                      onClick={() => handleDecline(order.order_id)}
-                      className="px-4 py-2 bg-red-500 text-white rounded-lg text-xs font-semibold hover:bg-red-600"
-                    >
-                      Confirm Decline
-                    </button>
-                    <button
-                      onClick={() => setCancellingId(null)}
-                      className="px-4 py-2 border border-stone-300 text-stone-500 rounded-lg text-xs"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setCancellingId(order.order_id)}
-                      className="px-4 py-2 border-2 border-orange-500 text-orange-500 rounded-lg text-xs font-semibold uppercase tracking-wide hover:bg-orange-50"
-                    >
-                      Decline
-                    </button>
-                    <button
-                      onClick={() => handleConfirm(order.order_id)}
-                      className="px-4 py-2 bg-orange-500 text-white rounded-lg text-xs font-semibold uppercase tracking-wide hover:bg-orange-600"
-                    >
-                      Process
-                    </button>
-                  </div>
-                )
-              )}
+                <button className="ml-auto flex items-center gap-1.5 px-4 py-2 rounded-md border border-stone-300 bg-white text-sm font-medium text-stone-500 hover:bg-stone-50">
+                    <ListFilter size={13} />
+                    Sort
+                    <ChevronDown size={12} />
+                </button>
             </div>
 
-            <div className="flex flex-col divide-y divide-stone-100">
-              {order.items.map((item) => (
-                <div key={item.order_item_id} className="flex items-center justify-between py-2.5">
-                  <span className="text-sm font-semibold text-orange-500 min-w-[28px]">x{item.quantity}</span>
-                  <span className="text-sm text-stone-700 flex-1 mx-2">{item.name}</span>
-                  <span className="text-sm font-semibold text-stone-800">₱{item.subtotal.toFixed(2)}</span>
+            {/* Table */}
+            <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-visible">
+                <div className="overflow-x-auto">
+                    <Table className="min-w-[900px]">
+                        <TableHeader>
+                            <TableRow className="bg-stone-50 hover:bg-stone-50">
+                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Customer</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Order ID</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Items</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Date</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Location</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Fulfillment</TableHead>
+                                {activeTab !== 'request' && (
+                                    <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Status</TableHead>
+                                )}
+                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Total</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+
+                        <TableBody>
+                            {isLoading && (
+                                <TableRow>
+                                    <TableCell colSpan={9} className="py-16 text-center text-stone-400 text-sm">
+                                        Loading orders...
+                                    </TableCell>
+                                </TableRow>
+                            )}
+
+                            {error && (
+                                <TableRow>
+                                    <TableCell colSpan={9} className="py-16 text-center text-red-400 text-sm">
+                                        {error}
+                                    </TableCell>
+                                </TableRow>
+                            )}
+
+                            {!isLoading && visibleOrders.length === 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={9} className="py-16 text-center text-stone-400 text-sm">
+                                        No orders here yet.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+
+                            {!isLoading && visibleOrders.map((order) => (
+                                <TableRow key={order.order_id} className="hover:bg-stone-50 transition-colors">
+
+                                    {/* Customer */}
+                                    <TableCell className="text-center align-middle">
+                                        <div className="flex flex-col items-center gap-1">
+                                            <p className="text-xs font-semibold text-stone-800">
+                                                {order.customer_name ?? "Customer"}
+                                            </p>
+                                        </div>
+                                    </TableCell>
+
+                                    {/* Order ID */}
+                                    <TableCell className="text-center align-middle">
+                                        <p className="text-xs text-stone-500 font-mono">#{order.order_id.slice(0, 8)}</p>
+                                    </TableCell>
+
+                                    {/* Items */}
+                                    <TableCell className="text-center align-middle">
+                                        <button
+                                            onClick={() => setSelectedOrderForItems(order)}
+                                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-lg text-xs font-medium transition-colors"
+                                        >
+                                            <Eye size={12} />
+                                            View {order.items.length} item{order.items.length !== 1 ? "s" : ""}
+                                        </button>
+                                    </TableCell>
+
+                                    {/* Date */}
+                                    <TableCell className="text-center align-middle">
+                                        <p className="text-xs text-stone-600">
+                                            {new Date(order.created_at).toLocaleDateString("en-PH", {
+                                                month: "short", day: "numeric", year: "numeric",
+                                            })}
+                                        </p>
+                                        <p className="text-xs text-stone-400">
+                                            {new Date(order.created_at).toLocaleTimeString("en-PH", {
+                                                hour: "numeric", minute: "2-digit",
+                                            })}
+                                        </p>
+                                    </TableCell>
+
+                                    {/* Location */}
+                                    <TableCell className="text-center align-middle">
+                                        {order.fulfillment === 'delivery' && order.delivery_landmark ? (
+                                            <button
+                                                onClick={() => openMap(order)}
+                                                className="inline-flex items-center gap-1 text-xs text-blue-500 hover:text-orange-500 transition-colors"
+                                            >
+                                                <MapPinned size={12} />
+                                                <span className="truncate max-w-[120px]">
+                                                    {order.delivery_landmark}, {order.delivery_barangay}
+                                                </span>
+                                            </button>
+                                        ) : order.fulfillment === 'pickup' && order.latitude && order.longitude ? (
+                                            <button
+                                                onClick={() => openMap(order)}
+                                                className="inline-flex items-center gap-1 text-xs text-blue-500 hover:text-orange-500 transition-colors"
+                                            >
+                                                <MapPinned size={12} />
+                                                <span>View Location</span>
+                                            </button>
+                                        ) : (
+                                            <p className="text-xs text-stone-400">—</p>
+                                        )}
+                                    </TableCell>
+
+                                    {/* Fulfillment */}
+                                    <TableCell className="text-center align-middle">
+                                        <span className={`inline-flex text-xs font-semibold px-2 py-1 rounded-full ${
+                                            order.fulfillment === 'delivery'
+                                                ? 'bg-blue-50 text-blue-500'
+                                                : 'bg-green-50 text-green-600'
+                                        }`}>
+                                            {order.fulfillment === 'delivery' ? 'Delivery' : 'Pick-up'}
+                                        </span>
+                                    </TableCell>
+
+                                    {/* Status — hidden on request tab */}
+                                    {activeTab !== 'request' && (
+                                        <TableCell className="text-center align-middle">
+                                            <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${statusBadgeClass(order.status)}`}>
+                                                <span className={`w-1.5 h-1.5 rounded-full ${statusDotClass(order.status)}`} />
+                                                {statusLabel(order.status)}
+                                            </span>
+                                            {order.cancel_reason && (
+                                                <p className="text-[10px] text-stone-400 mt-1 max-w-[120px] truncate italic">
+                                                    {order.cancel_reason}
+                                                </p>
+                                            )}
+                                        </TableCell>
+                                    )}
+
+                                    {/* Total */}
+                                    <TableCell className="text-center align-middle">
+                                        <p className="text-sm font-bold text-stone-800">₱{order.total.toFixed(2)}</p>
+                                    </TableCell>
+
+                                    {/* Actions */}
+                                    <TableCell className="text-center align-middle">
+                                        {activeTab !== 'history' ? (
+                                            <button
+                                                onClick={() => setSelectedOrderForActions(order)}
+                                                className="border border-stone-200 rounded-lg w-8 h-8 flex items-center justify-center mx-auto hover:bg-stone-50 transition-colors text-stone-500"
+                                            >
+                                                <span className="text-lg">⋯</span>
+                                            </button>
+                                        ) : (
+                                            <p className="text-xs text-stone-300">—</p>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </div>
-              ))}
             </div>
 
-            {order.notes && (
-              <p className="mt-3 text-xs text-stone-500 bg-stone-50 rounded-lg px-3 py-2">
-                Note: {order.notes}
-              </p>
+            {/* Vendor Actions Modal */}
+            {selectedOrderForActions && (
+                <VendorOrderActionsModal
+                    order={selectedOrderForActions}
+                    activeTab={activeTab}
+                    onConfirm={() => {
+                        handleConfirm(selectedOrderForActions.order_id);
+                        setSelectedOrderForActions(null);
+                    }}
+                    onDecline={(reason) => {
+                        setCancelReason(reason);
+                        handleDecline(selectedOrderForActions.order_id);
+                        setSelectedOrderForActions(null);
+                    }}
+                    onStatusUpdate={(status) => {
+                        handleStatusUpdate(selectedOrderForActions.order_id, status as any);
+                        setSelectedOrderForActions(null);
+                    }}
+                    onClose={() => setSelectedOrderForActions(null)}
+                />
             )}
 
-            {order.fulfillment === 'delivery' && order.delivery_landmark && (
-              <button
-                onClick={() => openMap(order)}
-                className="mt-2 flex items-center gap-1.5 text-xs text-blue-500 underline hover:text-orange-400 transition-colors text-left"
-              >
-                <MapPinned size={12} className="flex-shrink-0" />
-                {order.delivery_landmark}, {order.delivery_barangay}, {order.delivery_city}
-              </button>
+            {/* Items Modal */}
+            {selectedOrderForItems && (
+                <OrderItemsModal
+                    storeName={selectedOrderForItems.customer_name ?? "Customer"}
+                    items={selectedOrderForItems.items}
+                    onClose={() => setSelectedOrderForItems(null)}
+                />
             )}
 
-            <div className="mt-4 pt-4 border-t border-stone-100 flex items-center justify-between">
-              <div className="flex items-center gap-3 flex-wrap">
-                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                  order.fulfillment === 'delivery'
-                    ? 'bg-blue-50 text-blue-500'
-                    : 'bg-green-50 text-green-600'
-                }`}>
-                  Fulfillment: {order.fulfillment === 'delivery' ? 'Delivery' : 'Pick-up'}
-                </span>
-
-                {activeTab !== 'request' && (
-                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-semibold ${statusBadgeClass(order.status)}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${statusDotClass(order.status)}`} />
-                    {statusLabel(order.status)}
-                    {order.cancel_reason && ` — ${order.cancel_reason}`}
-                  </span>
-                )}
-              </div>
-
-              <span className="text-sm font-bold text-stone-800">
-                Total: ₱{order.total.toFixed(2)}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* I'm not gonna lie, this may or may not fucking explode, don't touch it please */}
-      {mapOverlay && (
-        <OrderMap
-          isOpen={!!mapOverlay}
-          onClose={() => setMapOverlay(null)}
-          lat={mapOverlay.lat}
-          lng={mapOverlay.lng}
-          address={mapOverlay.address}
-        />
-      )}
-    </div>
-  );
+            {/* Map Modal */}
+            {mapOverlay && (
+                <OrderMap
+                    isOpen={!!mapOverlay}
+                    onClose={() => setMapOverlay(null)}
+                    lat={mapOverlay.lat}
+                    lng={mapOverlay.lng}
+                    address={mapOverlay.address}
+                />
+            )}
+        </div>
+    );
 }
