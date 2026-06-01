@@ -10,27 +10,18 @@ export async function getOrCreateCart(storeId: string) {
     if (authError) throw new Error(`Auth error: ${authError.message}`);
     if (!user) throw new Error("Not authenticated");
 
-
-    const { data: cart, error: selectError } = await supabase
+    const { data: cart, error } = await supabase
         .from("carts")
-        .select("id")
-        .eq("customer_id", user.id)
-        .eq("store_id", storeId)
-        .maybeSingle();
-
-    if (selectError) throw new Error(`Cart lookup failed: ${selectError.message} (${selectError.code})`);
-
-    if (cart) return cart;
-
-    const { data: newCart, error: insertError } = await supabase
-        .from("carts")
-        .insert({ customer_id: user.id, store_id: storeId })
+        .upsert(
+            { customer_id: user.id, store_id: storeId },
+            { onConflict: "customer_id,store_id", ignoreDuplicates: false }
+        )
         .select("id")
         .single();
 
-    if (insertError) throw new Error(`Cart creation failed: ${insertError.message} (${insertError.code})`);
+    if (error) throw new Error(`Cart upsert failed: ${error.message}`);
 
-    return newCart;
+    return cart;
 }
 
 export async function getCartItems(cartId: string) {
@@ -45,7 +36,7 @@ export async function getCartItems(cartId: string) {
     return data ?? [];
 }
 
-export async function insertCartItem(cartId: string, item: MenuItem) {
+export async function insertCartItem(cartId: string, item: MenuItem, quantity: number = 1) {
     const supabase = createClient();
 
     const { data, error } = await supabase
@@ -56,12 +47,12 @@ export async function insertCartItem(cartId: string, item: MenuItem) {
             name: item.name,
             price: item.price,
             image: item.image,
-            quantity: 1,
+            quantity,
         })
         .select()
         .single();
 
-    if (error) throw new Error(`Failed to insert cart item: ${error.message} (${error.code})`);
+    if (error) throw new Error(`Failed to insert cart item: ${error.message}`);
     return data;
 }
 

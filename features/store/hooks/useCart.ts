@@ -36,25 +36,20 @@ export function useCart(storeId: string) {
         }
     };
 
-    const addItem = async (item: MenuItem) => {
-        // If cart isn't ready yet, wait for it before giving up
-        if (!cartId) {
-            console.warn("addItem called before cart was initialized — skipping");
-            return;
-        }
+    const addItem = async (item: MenuItem, quantity: number = 1) => {
+        if (!cartId) return;
 
         const existing = items.find(i => i.item_id === item.id);
         if (existing) {
-            await updateQty(existing.id, existing.quantity + 1);
+            await updateQty(existing.id, existing.quantity + quantity);
             return;
         }
 
         try {
-            const newItem = await insertCartItem(cartId, item);
+            const newItem = await insertCartItem(cartId, item, quantity);
             setItems(prev => [...prev, newItem]);
         } catch (err) {
-            const message = err instanceof Error ? err.message : String(err);
-            console.error("Failed to add item:", message);
+            console.error("Failed to add item:", err);
         }
     };
 

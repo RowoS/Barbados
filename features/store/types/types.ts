@@ -26,7 +26,6 @@ export type MenuCategory = {
 
 export interface StoreHeaderProps {
     name: string;
-    logo: string | null;
     description: string | null;
     rating?: number | null;
     storeId: string;
@@ -43,6 +42,7 @@ export interface MenuGridProps {
     onSearchChange: (q: string) => void;
     onTabChange: (tab: string) => void;
     onAddToCart: (item: MenuItem) => void;
+    
 }
 
 
