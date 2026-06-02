@@ -8,12 +8,16 @@ import MenuGrid from "../components/MenuGrid";
 import { InlineCart } from "../components/CartDrawer";
 import { AddToCartModal } from "../components/AddtoCartModal";
 import { MenuItem } from "../types/types";
+import {StoreCheckoutModal} from "../components/StoreCheckOutModel";
+import { CheckoutModal } from "@/features/customers/components/CheckOutModal";
+
 
 type StoreTab = "shop" | "reviews";
 
 export default function StoreCatalogPage({ storeId }: { storeId: string }) {
     const [pendingItem, setPendingItem] = useState<MenuItem | null>(null);
     const [activeStoreTab, setActiveStoreTab] = useState<StoreTab>("shop");
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
     const {
         categories, isLoading, searchQuery, activeTab, tabs,
@@ -22,13 +26,14 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
     } = useStorePage(storeId);
 
     const handleAddToCart = async (item: MenuItem, quantity: number) => {
-        const existing = cart.items.find(ci => ci.item_id === item.id);
+        const existing = cart.values.items.find(ci => ci.item_id === item.id);
         if (existing) {
-            await cart.updateQty(existing.id, existing.quantity + quantity);
+            await cart.actions.updateQty(existing.id, existing.quantity + quantity);
         } else {
-            await cart.addItem(item, quantity);
+            await cart.actions.addItem(item, quantity);
         }
     };
+
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -61,14 +66,14 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
                         </div>
                         <div style={{ flex: 3, minWidth: 0 }}>
                             <InlineCart
-                                items={cart.items}
-                                total={cart.total}
-                                count={cart.count}
+                                items={cart.values.items}
+                                total={cart.values.total}
+                                count={cart.values.count}
                                 storeName={storeInfo.name}
-                                onUpdateQty={cart.updateQty}
-                                onRemoveItem={cart.removeItem}
-                                onClearCart={cart.clearCart}
-                                onCheckout={() => {}}
+                                onUpdateQty={cart.actions.updateQty}
+                                onRemoveItem={cart.actions.removeItem}
+                                onClearCart={cart.actions.clearCart}
+                                onCheckout={() => {setIsCheckoutOpen(true)}}
                             />
                         </div>
                     </div>
@@ -82,6 +87,21 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
                     item={pendingItem}
                     onConfirm={handleAddToCart}
                     onClose={() => setPendingItem(null)}
+                />
+            )}
+
+
+            {isCheckoutOpen && cart.values.cartId && (
+                <StoreCheckoutModal
+                    open={isCheckoutOpen}
+                    onOpenChange={setIsCheckoutOpen}
+                    storeId={storeId}
+                    storeName={storeInfo.name ?? ""}
+                    cartId={cart.values.cartId}
+                    items={cart.values.items}
+                    subtotal={cart.values.total}
+                    onUpdateQty={cart.actions.updateQty}
+                    onRemoveItem={cart.actions.removeItem}
                 />
             )}
 

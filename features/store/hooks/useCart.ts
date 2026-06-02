@@ -63,6 +63,12 @@ export function useCart(storeId: string) {
         }
     };
 
+    const refresh = () => {
+        if (cartId) {
+            getCartItems(cartId).then(setItems);
+        }
+    };
+
     const updateQty = async (cartItemId: string, qty: number) => {
         if (qty <= 0) { await removeItem(cartItemId); return; }
         try {
@@ -90,5 +96,8 @@ export function useCart(storeId: string) {
     const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
     const count = items.reduce((sum, i) => sum + i.quantity, 0);
 
-    return { items, addItem, removeItem, updateQty, clearCart, total, count, isLoading, error };
+    return { 
+        values: { items, cartId, total, count, isLoading, error },
+        actions: { addItem, removeItem, updateQty, clearCart, refresh }
+    };
 }
