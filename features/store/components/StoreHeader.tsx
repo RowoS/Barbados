@@ -22,7 +22,6 @@ export default function StoreHeader({
     return (
         <>
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 px-6 pt-5 pb-0 mb-0">
-                {/* Top row — name + action buttons */}
                 <div className="flex items-start justify-between gap-4 flex-wrap mb-3">
                     <div className="flex-1 min-w-0">
                         <h1 className="text-2xl md:text-3xl font-bold text-[#1D3557] mb-2 break-words">
