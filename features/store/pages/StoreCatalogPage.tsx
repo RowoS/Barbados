@@ -37,7 +37,10 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 pt-20" style={{ marginTop: "-32px", position: "relative", zIndex: 10 }}>
+            <div
+                className="max-w-7xl mx-auto px-4 pt-20 relative"
+                style={{ marginTop: "-32px" }}
+            >
                 <StoreHeader
                     name={storeInfo.name ?? "Unknown Store"}
                     description={storeInfo.description ?? ""}
