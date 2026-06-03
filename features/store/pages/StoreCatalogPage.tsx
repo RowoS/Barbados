@@ -9,12 +9,14 @@ import { InlineCart } from "../components/CartDrawer";
 import { AddToCartModal } from "../components/AddtoCartModal";
 import { MenuItem } from "../types/types";
 import {StoreCheckoutModal} from "../components/StoreCheckOutModel";
-import { CheckoutModal } from "@/features/customers/components/CheckOutModal";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 
 type StoreTab = "shop" | "reviews";
 
 export default function StoreCatalogPage({ storeId }: { storeId: string }) {
+    const router = useRouter();
     const [pendingItem, setPendingItem] = useState<MenuItem | null>(null);
     const [activeStoreTab, setActiveStoreTab] = useState<StoreTab>("shop");
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -46,6 +48,15 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
                 className="max-w-7xl mx-auto px-4 pt-20 relative"
                 style={{ marginTop: "-32px" }}
             >
+                {/* Back button */}
+                <button
+                    onClick={() => router.back()}
+                    className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-[#FF6B35] transition-colors mb-4"
+                >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back
+                </button>
+
                 <StoreHeader
                     name={storeInfo.name ?? "Unknown Store"}
                     description={storeInfo.description ?? ""}
