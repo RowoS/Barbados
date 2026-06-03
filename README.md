@@ -10,6 +10,25 @@
 | BS.010.005 | 2026-04-20 |
 | BS.010.006 | 2026-04-28 |
 | BS.010.007 | 2026-05-05 |
+| BS.010.008 | 2026-05-23 |
+| BS.010.009 | 2026-05-28 |
+
+## BS.010.009 Release Notes
+  **Admin Features and Reporting**
+  * Created an admin role for store monitoring with respective dashboard
+  * Added reporting features for customers to report certain behavior from vendors
+  
+  **Other Updates**
+  * Fixed and updated middleware routing for customers and vendors
+  * Removed unused components 
+
+## BS.010.008 Release Notes
+  **Chat System**
+  * Implemented a chat system feature for customers to contact vendors
+  * Added chatlist to customer homepage
+  
+  **Notifications** 
+  * Implemented notifications for customers and vendors; notify users with regards to order status
 
 ## BS.010.007 Release Notes
  **Review and Ratings**
