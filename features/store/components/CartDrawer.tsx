@@ -26,14 +26,16 @@ export function InlineCart({
         <div
             className="rounded-xl shadow-2xl sticky top-24 flex flex-col overflow-hidden"
             style={{
-                background: "linear-gradient(135deg, #2A4A6F 0%, #1D3557 100%)",
-                border: "1px solid rgba(255,255,255,0.1)"
+                background: "#f1f5f9",
+                border: "1px solid #e2e8f0"
             }}
         >
-            {/* Header */}
             <div
                 className="px-5 py-4"
-                style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}
+                style={{
+                    background: "linear-gradient(135deg, #3A6B9F 0%, #2A5480 100%)",
+                    borderBottom: "1px solid rgba(255,255,255,0.1)"
+                }}
             >
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -46,14 +48,14 @@ export function InlineCart({
                         <h2 className="font-bold text-white">Your Order</h2>
                     </div>
                     <div className="flex items-center gap-3">
-                        {storeName && <p className="text-xs" style={{ color: "#93c5fd" }}>from {storeName}</p>}
+                        {storeName && <p className="text-xs" style={{ color: "#bfdbfe" }}>from {storeName}</p>}
                         {items.length > 0 && (
                             <button
                                 onClick={onClearCart}
                                 className="text-xs transition-colors"
-                                style={{ color: "#93c5fd" }}
+                                style={{ color: "#bfdbfe" }}
                                 onMouseEnter={(e) => e.currentTarget.style.color = "#fca5a5"}
-                                onMouseLeave={(e) => e.currentTarget.style.color = "#93c5fd"}
+                                onMouseLeave={(e) => e.currentTarget.style.color = "#bfdbfe"}
                             >
                                 Clear
                             </button>
@@ -68,12 +70,12 @@ export function InlineCart({
                     <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
                         <div
                             className="w-14 h-14 rounded-xl flex items-center justify-center mb-3"
-                            style={{ background: "rgba(255,255,255,0.1)" }}
+                            style={{ background: "#e2e8f0" }}
                         >
-                            <ShoppingBag size={24} style={{ color: "rgba(255,255,255,0.5)" }} />
+                            <ShoppingBag size={24} style={{ color: "#94a3b8" }} />
                         </div>
-                        <p className="font-medium text-white text-sm">Your cart is empty</p>
-                        <p className="text-xs mt-1" style={{ color: "#93c5fd" }}>Add items from the menu to get started</p>
+                        <p className="font-medium text-[#1D3557] text-sm">Your cart is empty</p>
+                        <p className="text-xs mt-1" style={{ color: "#64748b" }}>Add items from the menu to get started</p>
                     </div>
                 ) : (
                     <div className="px-4 py-3 space-y-3">
@@ -82,11 +84,9 @@ export function InlineCart({
                                 key={item.id}
                                 className="flex items-center gap-3 rounded-xl p-3 transition-colors"
                                 style={{
-                                    background: "rgba(255,255,255,0.05)",
-                                    border: "1px solid rgba(255,255,255,0.1)",
+                                    background: "#ffffff",
+                                    border: "1px solid #e2e8f0",
                                 }}
-                                onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
-                                onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
                             >
                                 {/* Image */}
                                 <div className="w-10 h-10 rounded-lg flex-shrink-0 overflow-hidden">
@@ -107,8 +107,8 @@ export function InlineCart({
                                 </div>
                                 
                                 <div className="flex-1 min-w-0">
-                                    <p className="font-medium text-white text-sm truncate">{item.name}</p>
-                                    <p className="text-sm font-semibold mt-1" style={{ color: "#F4D35E" }}>
+                                    <p className="font-medium text-[#1D3557] text-sm truncate">{item.name}</p>
+                                    <p className="text-sm font-semibold mt-1" style={{ color: "#FF6B35" }}>
                                         ₱{(item.price * item.quantity).toFixed(2)}
                                     </p>
                                 </div>
@@ -117,27 +117,35 @@ export function InlineCart({
                                     <button
                                         onClick={() => item.quantity === 1 ? onRemoveItem(item.id) : onUpdateQty(item.id, item.quantity - 1)}
                                         className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
-                                        style={{ background: "rgba(255,255,255,0.1)" }}
+                                        style={{ background: "#e2e8f0" }}
                                         onMouseEnter={(e) => {
                                             if (item.quantity === 1) {
-                                                e.currentTarget.style.background = "rgba(239,68,68,0.3)";
+                                                e.currentTarget.style.background = "#fecaca";
+                                                e.currentTarget.style.color = "#dc2626";
                                             } else {
-                                                e.currentTarget.style.background = "rgba(255,255,255,0.2)";
+                                                e.currentTarget.style.background = "#cbd5e1";
                                             }
                                         }}
-                                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.background = "#e2e8f0";
+                                            e.currentTarget.style.color = "#1D3557";
+                                        }}
                                     >
-                                        {item.quantity === 1 ? <Trash2 size={12} className="text-white" /> : <Minus size={12} className="text-white" />}
+                                        {item.quantity === 1 ? <Trash2 size={12} style={{ color: "#64748b" }} /> : <Minus size={12} style={{ color: "#1D3557" }} />}
                                     </button>
-                                    <span className="w-5 text-center text-sm font-bold text-white">{item.quantity}</span>
+                                    <span className="w-5 text-center text-sm font-bold text-[#1D3557]">{item.quantity}</span>
                                     <button
                                         onClick={() => onUpdateQty(item.id, item.quantity + 1)}
                                         className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
-                                        style={{ background: "rgba(255,255,255,0.1)" }}
-                                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(34,197,94,0.3)"}
-                                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                                        style={{ background: "#e2e8f0" }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.background = "#cbd5e1";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.background = "#e2e8f0";
+                                        }}
                                     >
-                                        <Plus size={12} className="text-white" />
+                                        <Plus size={12} style={{ color: "#1D3557" }} />
                                     </button>
                                 </div>
                             </div>
@@ -148,19 +156,19 @@ export function InlineCart({
 
             {/* Footer */}
             {items.length > 0 && (
-                <div className="px-5 py-4 space-y-3" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+                <div className="px-5 py-4 space-y-3" style={{ background: "#ffffff", borderTop: "1px solid #e2e8f0" }}>
                     <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                            <span style={{ color: "#93c5fd" }}>Subtotal ({count} {count === 1 ? "item" : "items"})</span>
-                            <span className="text-white">₱{total.toFixed(2)}</span>
+                            <span style={{ color: "#64748b" }}>Subtotal ({count} {count === 1 ? "item" : "items"})</span>
+                            <span className="font-medium text-[#1D3557]">₱{total.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                            <span style={{ color: "#93c5fd" }}>Delivery fee</span>
-                            <span className="text-white">₱{deliveryFee.toFixed(2)}</span>
+                            <span style={{ color: "#64748b" }}>Delivery fee</span>
+                            <span className="font-medium text-[#1D3557]">₱{deliveryFee.toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between text-base font-bold pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-                            <span className="text-white">Total</span>
-                            <span style={{ color: "#F4D35E" }}>₱{orderTotal.toFixed(2)}</span>
+                        <div className="flex justify-between text-base font-bold pt-2" style={{ borderTop: "1px solid #e2e8f0" }}>
+                            <span className="text-[#1D3557]">Total</span>
+                            <span style={{ color: "#FF6B35" }}>₱{orderTotal.toFixed(2)}</span>
                         </div>
                     </div>
                     <button
@@ -183,9 +191,9 @@ export function InlineCart({
                         <Link
                             href="/customer?tab=cart"
                             className="text-xs transition-colors"
-                            style={{ color: "#93c5fd" }}
-                            onMouseEnter={(e) => e.currentTarget.style.color = "#ffffff"}
-                            onMouseLeave={(e) => e.currentTarget.style.color = "#93c5fd"}
+                            style={{ color: "#64748b" }}
+                            onMouseEnter={(e) => e.currentTarget.style.color = "#FF6B35"}
+                            onMouseLeave={(e) => e.currentTarget.style.color = "#64748b"}
                         >
                             View all carts
                         </Link>
