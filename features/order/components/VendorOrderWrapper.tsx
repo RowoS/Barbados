@@ -5,13 +5,13 @@ import { VendorsOrdersPage} from "./VendorOrderPage";
 
 export default function VendorOrdersWrapper() {
   return (
-    <SidebarProvider>
+    <SidebarProvider style={{ background: "#f1f5f9" }}>
       <VendorSidebar />
 
-      <SidebarInset>
+      <SidebarInset style={{ background: "#f1f5f9" }}>
         <VendorNavBar />
 
-        <main className="pt-25">
+        <main className="pt-25" style={{ marginRight: "8rem" }}>
             <VendorsOrdersPage/>
         </main>
 

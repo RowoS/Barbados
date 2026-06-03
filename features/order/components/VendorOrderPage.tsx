@@ -20,7 +20,7 @@ export function VendorsOrdersPage() {
     const { values, functions } = useVendorOrders();
     const { visibleOrders, isLoading, error, activeTab, counts, cancelReason } = values;
     const { setActiveTab, handleConfirm, handleDecline, handleStatusUpdate,
-        setCancellingId, setCancelReason, statusLabel } = functions;
+        setCancelReason, statusLabel } = functions;
 
     const [mapOverlay, setMapOverlay] = useState<{ lat: number; lng: number; address: string } | null>(null);
     const [selectedOrderForActions, setSelectedOrderForActions] = useState<typeof visibleOrders[0] | null>(null);
@@ -58,8 +58,8 @@ export function VendorsOrdersPage() {
                                 index === 2 ? 'rounded-r-md' : ''
                             } border ${
                                 activeTab === tab.key
-                                    ? 'z-10 bg-orange-500 border-orange-500 text-white'
-                                    : 'bg-white border-stone-300 text-stone-500 hover:bg-stone-50'
+                                    ? 'z-10 bg-[#FF6B35] border-[#FF6B35] text-white'
+                                    : 'bg-white border-[#ffe4d4] text-stone-500 hover:bg-orange-50'
                             }`}
                         >
                             {tab.key === 'request' && <Clock size={13} />}
@@ -67,8 +67,8 @@ export function VendorsOrdersPage() {
                             {tab.count != null && tab.count > 0 && (
                                 <span className={`ml-0.5 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center ${
                                     activeTab === tab.key
-                                        ? 'bg-white text-orange-500'
-                                        : 'bg-orange-500 text-white'
+                                        ? 'bg-white text-[#FF6B35]'
+                                        : 'bg-[#FF6B35] text-white'
                                 }`}>
                                     {tab.count}
                                 </span>
@@ -77,7 +77,7 @@ export function VendorsOrdersPage() {
                     ))}
                 </div>
 
-                <button className="ml-auto flex items-center gap-1.5 px-4 py-2 rounded-md border border-stone-300 bg-white text-sm font-medium text-stone-500 hover:bg-stone-50">
+                <button className="ml-auto flex items-center gap-1.5 px-4 py-2 rounded-md border border-[#ffe4d4] bg-white text-sm font-medium text-stone-500 hover:bg-orange-50 hover:border-orange-200">
                     <ListFilter size={13} />
                     Sort
                     <ChevronDown size={12} />
@@ -85,22 +85,22 @@ export function VendorsOrdersPage() {
             </div>
 
             {/* Table */}
-            <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-visible">
+            <div className="rounded-2xl shadow-sm overflow-visible" style={{ background: "#ffffff", border: "1px solid #ffe4d4" }}>
                 <div className="overflow-x-auto">
                     <Table className="min-w-[900px]">
                         <TableHeader>
-                            <TableRow className="bg-stone-50 hover:bg-stone-50">
-                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Customer</TableHead>
-                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Order ID</TableHead>
-                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Items</TableHead>
-                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Date</TableHead>
-                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Location</TableHead>
-                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Fulfillment</TableHead>
+                            <TableRow style={{ background: "linear-gradient(135deg, #fff5f0 0%, #fef3e2 100%)", borderBottom: "1px solid #ffe4d4" }}>
+                                <TableHead className="text-xs font-semibold text-stone-500 uppercase tracking-wide text-center">Customer</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-500 uppercase tracking-wide text-center">Order ID</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-500 uppercase tracking-wide text-center">Items</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-500 uppercase tracking-wide text-center">Date</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-500 uppercase tracking-wide text-center">Location</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-500 uppercase tracking-wide text-center">Fulfillment</TableHead>
                                 {activeTab !== 'request' && (
-                                    <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Status</TableHead>
+                                    <TableHead className="text-xs font-semibold text-stone-500 uppercase tracking-wide text-center">Status</TableHead>
                                 )}
-                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Total</TableHead>
-                                <TableHead className="text-xs font-semibold text-stone-400 uppercase tracking-wide text-center">Actions</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-500 uppercase tracking-wide text-center">Total</TableHead>
+                                <TableHead className="text-xs font-semibold text-stone-500 uppercase tracking-wide text-center">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
 
@@ -129,13 +129,19 @@ export function VendorsOrdersPage() {
                                 </TableRow>
                             )}
 
-                            {!isLoading && visibleOrders.map((order) => (
-                                <TableRow key={order.order_id} className="hover:bg-stone-50 transition-colors">
-
+                            {!isLoading && visibleOrders.map((order, index) => (
+                                <TableRow 
+                                    key={order.order_id} 
+                                    className="transition-colors hover:bg-orange-50/50"
+                                    style={{ 
+                                        background: index % 2 === 0 ? "#ffffff" : "#fffaf5",
+                                        borderBottom: "1px solid #ffe4d4"
+                                    }}
+                                >
                                     {/* Customer */}
                                     <TableCell className="text-center align-middle">
                                         <div className="flex flex-col items-center gap-1">
-                                            <p className="text-xs font-semibold text-stone-800">
+                                            <p className="text-xs font-semibold text-stone-700">
                                                 {order.customer_name ?? "Customer"}
                                             </p>
                                         </div>
@@ -150,7 +156,7 @@ export function VendorsOrdersPage() {
                                     <TableCell className="text-center align-middle">
                                         <button
                                             onClick={() => setSelectedOrderForItems(order)}
-                                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-lg text-xs font-medium transition-colors"
+                                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-[#FF6B35] rounded-lg text-xs font-medium transition-colors"
                                         >
                                             <Eye size={12} />
                                             View {order.items.length} item{order.items.length !== 1 ? "s" : ""}
@@ -176,7 +182,7 @@ export function VendorsOrdersPage() {
                                         {order.fulfillment === 'delivery' && order.delivery_landmark ? (
                                             <button
                                                 onClick={() => openMap(order)}
-                                                className="inline-flex items-center gap-1 text-xs text-blue-500 hover:text-orange-500 transition-colors"
+                                                className="inline-flex items-center gap-1 text-xs text-blue-500 hover:text-[#FF6B35] transition-colors"
                                             >
                                                 <MapPinned size={12} />
                                                 <span className="truncate max-w-[120px]">
@@ -186,7 +192,7 @@ export function VendorsOrdersPage() {
                                         ) : order.fulfillment === 'pickup' && order.latitude && order.longitude ? (
                                             <button
                                                 onClick={() => openMap(order)}
-                                                className="inline-flex items-center gap-1 text-xs text-blue-500 hover:text-orange-500 transition-colors"
+                                                className="inline-flex items-center gap-1 text-xs text-blue-500 hover:text-[#FF6B35] transition-colors"
                                             >
                                                 <MapPinned size={12} />
                                                 <span>View Location</span>
@@ -200,7 +206,7 @@ export function VendorsOrdersPage() {
                                     <TableCell className="text-center align-middle">
                                         <span className={`inline-flex text-xs font-semibold px-2 py-1 rounded-full ${
                                             order.fulfillment === 'delivery'
-                                                ? 'bg-blue-50 text-blue-500'
+                                                ? 'bg-blue-50 text-blue-600'
                                                 : 'bg-green-50 text-green-600'
                                         }`}>
                                             {order.fulfillment === 'delivery' ? 'Delivery' : 'Pick-up'}
@@ -224,7 +230,7 @@ export function VendorsOrdersPage() {
 
                                     {/* Total */}
                                     <TableCell className="text-center align-middle">
-                                        <p className="text-sm font-bold text-stone-800">₱{order.total.toFixed(2)}</p>
+                                        <p className="text-sm font-bold text-[#1D3557]">₱{order.total.toFixed(2)}</p>
                                     </TableCell>
 
                                     {/* Actions */}
@@ -232,7 +238,7 @@ export function VendorsOrdersPage() {
                                         {activeTab !== 'history' ? (
                                             <button
                                                 onClick={() => setSelectedOrderForActions(order)}
-                                                className="border border-stone-200 rounded-lg w-8 h-8 flex items-center justify-center mx-auto hover:bg-stone-50 transition-colors text-stone-500"
+                                                className="border border-[#ffe4d4] rounded-lg w-8 h-8 flex items-center justify-center mx-auto hover:bg-orange-50 hover:border-orange-200 transition-colors text-stone-500"
                                             >
                                                 <span className="text-lg">⋯</span>
                                             </button>
