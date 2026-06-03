@@ -21,59 +21,92 @@ export default function StoreHeader({
 
     return (
         <>
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 px-6 pt-5 pb-0 mb-0">
-                <div className="flex items-start justify-between gap-4 flex-wrap mb-3">
-                    <div className="flex-1 min-w-0">
-                        <h1 className="text-2xl md:text-3xl font-bold text-[#1D3557] mb-2 break-words">
+            <div
+                className="rounded-2xl shadow-2xl p-6 border mb-6"
+                style={{
+                    background: "linear-gradient(135deg, #2A4A6F 0%, #1D3557 100%)",
+                    borderColor: "rgba(255,255,255,0.1)"
+                }}
+            >
+                {/* Store Info */}
+                <div className="flex items-start justify-between gap-4 mb-4">
+                    <div className="flex-1">
+                        <h1 className="text-2xl font-bold mb-2" style={{ color: "#ffffff" }}>
                             {name}
                         </h1>
-                        <div className="flex items-center gap-3 flex-wrap text-sm">
+                        <div className="flex items-center gap-4 flex-wrap text-sm" style={{ color: "#93c5fd" }}>
                             {rating != null && (
-                                <div className="flex items-center gap-1 bg-orange-50 px-2.5 py-1 rounded-full">
-                                    <Star className="w-4 h-4 fill-[#F4D35E] text-[#F4D35E]" />
-                                    <span className="font-medium text-[#1D3557]">{rating.toFixed(1)}</span>
+                                <div className="flex items-center gap-1">
+                                    <Star className="w-4 h-4" style={{ fill: "#F4D35E", color: "#F4D35E" }} />
+                                    <span className="font-medium" style={{ color: "#ffffff" }}>{rating.toFixed(1)}</span>
                                 </div>
                             )}
                             {description && (
-                                <span className="text-gray-500 text-sm line-clamp-1">{description}</span>
+                                <span className="line-clamp-1" style={{ color: "#93c5fd" }}>{description}</span>
                             )}
                         </div>
                     </div>
-
-                    <div className="flex items-center gap-2 flex-shrink-0 mt-1">
-                        <button
-                            onClick={() => setIsReportOpen(true)}
-                            className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-300 text-gray-400 hover:border-orange-400 hover:text-red-500 hover:bg-orange-50 transition-colors"
-                        >
-                            <Flag className="w-4 h-4" />
-                        </button>
-                    </div>
                 </div>
 
-                <div className="flex items-center gap-1 border-t border-gray-100 pt-1">
-                    {(["shop", "reviews"] as StoreTab[]).map((tab) => (
+                {/* Tab Bar */}
+                <div
+                    className="flex items-center justify-between pt-4"
+                    style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}
+                >
+                    <div className="flex gap-2 items-center">
+                        {(["shop", "reviews"] as StoreTab[]).map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => onTabChange(tab)}
+                                className="px-6 py-2.5 rounded-lg font-medium transition-all"
+                                style={
+                                    activeTab === tab
+                                        ? { background: "#FF6B35", color: "#ffffff" }
+                                        : { background: "rgba(255,255,255,0.1)", color: "#ffffff" }
+                                }
+                                onMouseEnter={(e) => {
+                                    if (activeTab !== tab) e.currentTarget.style.background = "rgba(255,255,255,0.2)";
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (activeTab !== tab) e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+                                }}
+                            >
+                                {tab === "shop" ? "Shop" : "Reviews"}
+                            </button>
+                        ))}
+
+                        {/* Divider */}
+                        <div className="w-px h-8 mx-2 text-white">
+                                |
+                        </div>
+
+                        {/* Chat Button */}
                         <button
-                            key={tab}
-                            onClick={() => onTabChange(tab)}
-                            className={`relative px-5 py-3 text-sm font-medium capitalize transition-colors ${
-                                activeTab === tab
-                                    ? "text-[#FF6B35]"
-                                    : "text-gray-500 hover:text-gray-700"
-                            }`}
-                        >
-                            {tab === "shop" ? "Shop" : "Reviews"}
-                            {activeTab === tab && (
-                                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#FF6B35] rounded-t" />
-                            )}
-                        </button>
-                        
-                    ))}
-                    <button
                             onClick={() => router.push(`/customer/store/${storeId}/chat?from=store`)}
-                            className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-600 hover:border-orange-400 hover:text-orange-500 hover:bg-orange-50 rounded-lg text-sm font-medium transition-colors"
+                            className="flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all"
+                            style={{ background: "rgba(255,255,255,0.1)", color: "#ffffff" }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.2)"}
+                            onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
                         >
                             <MessageCircle className="w-4 h-4" />
-                            <span className="hidden sm:inline">Chat with Store</span>
+                            Chat with Store
+                        </button>
+                    </div>
+
+                    {/* Report */}
+                    <button
+                        onClick={() => setIsReportOpen(true)}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-colors"
+                        style={{
+                            background: "rgba(239,68,68,0.2)",
+                            color: "#fca5a5",
+                            border: "1px solid rgba(248,113,113,0.3)"
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(239,68,68,0.3)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(239,68,68,0.2)"}
+                    >
+                        <Flag className="w-4 h-4" />
+                        Report
                     </button>
                 </div>
             </div>

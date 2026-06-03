@@ -23,66 +23,121 @@ export function InlineCart({
     const orderTotal = total + deliveryFee;
 
     return (
-        <div className="bg-white rounded-xl shadow-sm sticky top-24 flex flex-col overflow-hidden border border-gray-100">
+        <div
+            className="rounded-xl shadow-2xl sticky top-24 flex flex-col overflow-hidden"
+            style={{
+                background: "linear-gradient(135deg, #2A4A6F 0%, #1D3557 100%)",
+                border: "1px solid rgba(255,255,255,0.1)"
+            }}
+        >
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                <div className="flex items-center gap-2">
-                    <ShoppingCart size={18} className="text-orange-500" />
-                    <h2 className="font-bold text-gray-900">Your Order</h2>
-                </div>
-                <div className="flex items-center gap-2">
-                    {storeName && <p className="text-xs text-gray-400">from {storeName}</p>}
-                    {items.length > 0 && (
-                        <button
-                            onClick={onClearCart}
-                            className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+            <div
+                className="px-5 py-4"
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}
+            >
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <div
+                            className="w-8 h-8 rounded-lg flex items-center justify-center"
+                            style={{ background: "#FF6B35" }}
                         >
-                            Clear
-                        </button>
-                    )}
+                            <ShoppingCart className="w-4 h-4 text-white" />
+                        </div>
+                        <h2 className="font-bold text-white">Your Order</h2>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        {storeName && <p className="text-xs" style={{ color: "#93c5fd" }}>from {storeName}</p>}
+                        {items.length > 0 && (
+                            <button
+                                onClick={onClearCart}
+                                className="text-xs transition-colors"
+                                style={{ color: "#93c5fd" }}
+                                onMouseEnter={(e) => e.currentTarget.style.color = "#fca5a5"}
+                                onMouseLeave={(e) => e.currentTarget.style.color = "#93c5fd"}
+                            >
+                                Clear
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
             {/* Items */}
-            <div className="flex-1 overflow-y-auto max-h-80">
+            <div className="flex-1 overflow-y-auto max-h-96">
                 {items.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
-                        <div className="w-14 h-14 rounded-full bg-orange-50 flex items-center justify-center mb-3">
-                            <ShoppingBag size={24} className="text-orange-300" />
+                        <div
+                            className="w-14 h-14 rounded-xl flex items-center justify-center mb-3"
+                            style={{ background: "rgba(255,255,255,0.1)" }}
+                        >
+                            <ShoppingBag size={24} style={{ color: "rgba(255,255,255,0.5)" }} />
                         </div>
-                        <p className="font-medium text-gray-700 text-sm">Your cart is empty</p>
-                        <p className="text-xs text-gray-400 mt-1">Add items from the menu to get started</p>
+                        <p className="font-medium text-white text-sm">Your cart is empty</p>
+                        <p className="text-xs mt-1" style={{ color: "#93c5fd" }}>Add items from the menu to get started</p>
                     </div>
                 ) : (
                     <div className="px-4 py-3 space-y-3">
                         {items.map((item) => (
-                            <div key={item.id} className="flex items-center gap-3 bg-gray-50 rounded-xl p-2.5">
-                                {item.image ? (
-                                    <img src={item.image} alt={item.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
-                                ) : (
-                                    <div className="w-12 h-12 rounded-lg bg-gray-200 flex items-center justify-center flex-shrink-0">
-                                        <span className="text-gray-400 font-bold">{item.name.charAt(0)}</span>
-                                    </div>
-                                )}
+                            <div
+                                key={item.id}
+                                className="flex items-center gap-3 rounded-xl p-3 transition-colors"
+                                style={{
+                                    background: "rgba(255,255,255,0.05)",
+                                    border: "1px solid rgba(255,255,255,0.1)",
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                                onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
+                            >
+                                {/* Image */}
+                                <div className="w-10 h-10 rounded-lg flex-shrink-0 overflow-hidden">
+                                    {item.image ? (
+                                        <img 
+                                            src={item.image} 
+                                            alt={item.name} 
+                                            className="w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        <div
+                                            className="w-full h-full flex items-center justify-center"
+                                            style={{ background: "linear-gradient(135deg, #FF6B35, #F4D35E)" }}
+                                        >
+                                            <span className="text-white font-bold text-sm">{item.name.charAt(0)}</span>
+                                        </div>
+                                    )}
+                                </div>
+                                
                                 <div className="flex-1 min-w-0">
-                                    <p className="font-medium text-gray-900 text-xs truncate">{item.name}</p>
-                                    <p className="text-orange-500 text-xs font-semibold mt-0.5">
+                                    <p className="font-medium text-white text-sm truncate">{item.name}</p>
+                                    <p className="text-sm font-semibold mt-1" style={{ color: "#F4D35E" }}>
                                         ₱{(item.price * item.quantity).toFixed(2)}
                                     </p>
                                 </div>
-                                <div className="flex items-center gap-1 flex-shrink-0">
+                                
+                                <div className="flex items-center gap-1.5 flex-shrink-0">
                                     <button
                                         onClick={() => item.quantity === 1 ? onRemoveItem(item.id) : onUpdateQty(item.id, item.quantity - 1)}
-                                        className="w-6 h-6 rounded-full border border-gray-200 bg-white hover:border-orange-400 hover:text-orange-500 flex items-center justify-center transition-colors"
+                                        className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                                        style={{ background: "rgba(255,255,255,0.1)" }}
+                                        onMouseEnter={(e) => {
+                                            if (item.quantity === 1) {
+                                                e.currentTarget.style.background = "rgba(239,68,68,0.3)";
+                                            } else {
+                                                e.currentTarget.style.background = "rgba(255,255,255,0.2)";
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
                                     >
-                                        {item.quantity === 1 ? <Trash2 size={10} /> : <Minus size={10} />}
+                                        {item.quantity === 1 ? <Trash2 size={12} className="text-white" /> : <Minus size={12} className="text-white" />}
                                     </button>
-                                    <span className="w-4 text-center text-xs font-bold text-gray-800">{item.quantity}</span>
+                                    <span className="w-5 text-center text-sm font-bold text-white">{item.quantity}</span>
                                     <button
                                         onClick={() => onUpdateQty(item.id, item.quantity + 1)}
-                                        className="w-6 h-6 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center transition-colors"
+                                        className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                                        style={{ background: "rgba(255,255,255,0.1)" }}
+                                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(34,197,94,0.3)"}
+                                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
                                     >
-                                        <Plus size={10} />
+                                        <Plus size={12} className="text-white" />
                                     </button>
                                 </div>
                             </div>
@@ -91,25 +146,35 @@ export function InlineCart({
                 )}
             </div>
 
+            {/* Footer */}
             {items.length > 0 && (
-                <div className="border-t border-gray-100 px-5 py-4 space-y-3">
-                    <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs text-gray-500">
-                            <span>Subtotal ({count} {count === 1 ? "item" : "items"})</span>
-                            <span>₱{total.toFixed(2)}</span>
+                <div className="px-5 py-4 space-y-3" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+                    <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                            <span style={{ color: "#93c5fd" }}>Subtotal ({count} {count === 1 ? "item" : "items"})</span>
+                            <span className="text-white">₱{total.toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between text-xs text-gray-500">
-                            <span>Delivery fee</span>
-                            <span>₱{deliveryFee.toFixed(2)}</span>
+                        <div className="flex justify-between text-sm">
+                            <span style={{ color: "#93c5fd" }}>Delivery fee</span>
+                            <span className="text-white">₱{deliveryFee.toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between text-sm font-bold text-gray-900 pt-2 border-t border-gray-100">
-                            <span>Total</span>
-                            <span>₱{orderTotal.toFixed(2)}</span>
+                        <div className="flex justify-between text-base font-bold pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+                            <span className="text-white">Total</span>
+                            <span style={{ color: "#F4D35E" }}>₱{orderTotal.toFixed(2)}</span>
                         </div>
                     </div>
                     <button
                         onClick={onCheckout}
-                        className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors text-sm"
+                        className="w-full py-3 text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-all text-sm"
+                        style={{ background: "#FF6B35" }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "#E55A2B";
+                            e.currentTarget.style.transform = "scale(1.02)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "#FF6B35";
+                            e.currentTarget.style.transform = "scale(1)";
+                        }}
                     >
                         <ShoppingBag size={15} />
                         Place Order · ₱{orderTotal.toFixed(2)}
@@ -117,7 +182,10 @@ export function InlineCart({
                     <div className="flex justify-center">
                         <Link
                             href="/customer?tab=cart"
-                            className="text-xs text-gray-400 hover:text-orange-500 transition-colors"
+                            className="text-xs transition-colors"
+                            style={{ color: "#93c5fd" }}
+                            onMouseEnter={(e) => e.currentTarget.style.color = "#ffffff"}
+                            onMouseLeave={(e) => e.currentTarget.style.color = "#93c5fd"}
                         >
                             View all carts
                         </Link>

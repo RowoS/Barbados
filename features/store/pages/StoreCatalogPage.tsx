@@ -36,7 +36,12 @@ export default function StoreCatalogPage({ storeId }: { storeId: string }) {
 
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div 
+            className="min-h-screen"
+            style={{
+                background: "linear-gradient(135deg, #FFF5F0 0%, #FFE8DC 50%, #FFF0E6 100%)"
+            }}
+        >
             <div
                 className="max-w-7xl mx-auto px-4 pt-20 relative"
                 style={{ marginTop: "-32px" }}
