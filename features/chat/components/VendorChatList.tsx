@@ -18,7 +18,7 @@ export function VendorChatList() {
     const { values, functions } = useVendorConversations();
 
     return (
-        <div>
+        <div style={{ marginRight: "8rem" }}>
             {/* Header */}
             <div
                 className="rounded-xl p-8 mb-6 shadow-lg"
