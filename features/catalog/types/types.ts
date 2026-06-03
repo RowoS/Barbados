@@ -21,3 +21,34 @@ export type MenuCategory = {
     display_order: number;
     items: MenuItem[] | null;
 };
+
+export interface EditProductModalProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    item: MenuItem;
+    editFields: { name: string; description: string; price: string; image: string };
+    setEditFields: React.Dispatch<React.SetStateAction<{ name: string; description: string; price: string; image: string }>>;
+    categories: MenuCategory[];
+    isLoading: boolean;
+    onSave: (categoryId: string) => void;
+}
+
+export interface ProductFormModalProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    categories: MenuCategory[];
+    onSubmit: (categoryId: string, item: {
+        name: string;
+        description?: string;
+        price: number;
+        image?: string;
+    }) => Promise<void>;
+    isLoading: boolean;
+}
+
+export interface AddCategoryModalProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onSubmit: (name: string) => Promise<void>;
+    isLoading: boolean;
+}

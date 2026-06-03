@@ -1,28 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { X, Upload } from "lucide-react";
-import { MenuCategory } from "../types/types";
+import { X, Upload} from "lucide-react";
+import {  ProductFormModalProps } from "../types/types";
 
-interface ProductFormModalProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    categories: MenuCategory[];
-    onSubmit: (categoryId: string, item: {
-        name: string;
-        description?: string;
-        price: number;
-        image?: string;
-    }) => Promise<void>;
-    isLoading: boolean;
-}
 
 export default function ProductFormModal({ open, onOpenChange, categories, onSubmit, isLoading }: ProductFormModalProps) {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
-    const [images, setImages] = useState<string[]>([]);
+    const [image, setImage] = useState<string>("");
     const [fieldError, setFieldError] = useState("");
 
     if (!open) return null;
@@ -32,19 +20,17 @@ export default function ProductFormModal({ open, onOpenChange, categories, onSub
         setName("");
         setDescription("");
         setPrice("");
-        setImages([]);
+        setImage("");
         setFieldError("");
         onOpenChange(false);
     };
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                const newImages = [...images];
-                newImages[index] = reader.result as string;
-                setImages(newImages);
+                setImage(reader.result as string);
             };
             reader.readAsDataURL(file);
         }
@@ -69,7 +55,7 @@ export default function ProductFormModal({ open, onOpenChange, categories, onSub
             name: name.trim(),
             description: description.trim() || undefined,
             price: Number(price),
-            image: images[0] || undefined,
+            image: image || undefined,
         });
 
         handleClose();
@@ -96,52 +82,45 @@ export default function ProductFormModal({ open, onOpenChange, categories, onSub
                     {fieldError && <p className="text-red-500 text-sm mb-4">{fieldError}</p>}
 
                     <div className="space-y-6">
-                        {/* Image Upload */}
+                        {/* Image Upload - Single Centered */}
                         <div>
-                            <label className="block text-xs uppercase tracking-wide text-gray-500 mb-3">
-                                Upload Photo/Video
+                            <label className="block text-xs uppercase tracking-wide text-gray-500 mb-3 text-center">
+                                Product Image
                             </label>
-                            <div className="flex gap-4">
-                                {[0, 1, 2].map((index) => (
-                                    <div key={index}>
-                                        {images[index] ? (
-                                            <div className="w-32 h-32 rounded-xl overflow-hidden relative group">
-                                                <img
-                                                    src={images[index]}
-                                                    alt={`Preview ${index + 1}`}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                                <button
-                                                    onClick={() => {
-                                                        const newImages = [...images];
-                                                        newImages.splice(index, 1);
-                                                        setImages(newImages);
-                                                    }}
-                                                    className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
-                                                >
-                                                    <X size={20} className="text-white" />
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <label
-                                                htmlFor={`image-${index}`}
-                                                className="w-32 h-32 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-orange-300 transition-colors bg-gray-50"
-                                            >
-                                                <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center">
-                                                    <Upload size={18} className="text-indigo-400" />
-                                                </div>
-                                                <span className="text-sm text-gray-400">Add</span>
-                                                <input
-                                                    type="file"
-                                                    id={`image-${index}`}
-                                                    accept="image/*,video/*"
-                                                    onChange={(e) => handleImageChange(e, index)}
-                                                    className="hidden"
-                                                />
-                                            </label>
-                                        )}
+                            <div className="flex justify-center">
+                                {image ? (
+                                    <div className="relative w-48 h-48 rounded-xl overflow-hidden group">
+                                        <img
+                                            src={image}
+                                            alt="Product preview"
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <button
+                                            onClick={() => setImage("")}
+                                            className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                                        >
+                                            <X size={24} className="text-white" />
+                                        </button>
                                     </div>
-                                ))}
+                                ) : (
+                                    <label
+                                        htmlFor="product-image"
+                                        className="w-48 h-48 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-orange-300 transition-colors bg-gray-50"
+                                    >
+                                        <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center">
+                                            <Upload size={20} className="text-orange-400" />
+                                        </div>
+                                        <span className="text-sm text-gray-400">Upload Image</span>
+                                        <span className="text-xs text-gray-300">JPG, PNG, GIF up to 5MB</span>
+                                        <input
+                                            type="file"
+                                            id="product-image"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                            className="hidden"
+                                        />
+                                    </label>
+                                )}
                             </div>
                         </div>
 

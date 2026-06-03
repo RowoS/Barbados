@@ -33,12 +33,16 @@ export function useCatalogPage() {
         });
     };
 
-    const handleSaveEdit = async (categoryId: string, itemId: string) => {
-        await menu.functions.handleUpdateItem(categoryId, itemId, {
+    const handleSaveEdit = async (newCategoryId: string, itemId: string) => {
+        const originalCategoryId = menu.values.categories
+            .find(c => c.items?.some(i => i.id === itemId))?.id ?? "";
+
+        await menu.functions.handleUpdateItem(originalCategoryId, itemId, {
             name: editFields.name,
             description: editFields.description || undefined,
             price: Number(editFields.price),
             image: editFields.image || undefined,
+            category_id: newCategoryId, // ✅ pass new category
         });
         setEditingItemId(null);
     };
