@@ -1,21 +1,19 @@
 "use client";
-import { Mail, Lock, Eye, EyeOff, User, Smartphone } from 'lucide-react';
-import { useState} from 'react';
+import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/ui/button';
 import { useSignUpForm } from '@/features/auth/hooks/useSignUpForm';
 import GoogleButton from '@/features/auth/components/shared/GoogleSignInButton';
 import { InputField } from '@/shared/components/InputField';
 import EmailVerificationModal from '@/features/auth/components/modals/EmailConfirmationModal';
 
-interface SignUpProps {
-  onSwitchToLogin?: () => void;
-}
-
-export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
+export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { values, setters, fieldErrors, globalError, isLoading, submit,clearFieldError} = useSignUpForm();
-
+  const { values, setters, fieldErrors, globalError, isLoading, submit, clearFieldError } = useSignUpForm();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,9 +27,15 @@ export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-14 h-14 bg-accent-blue rounded-2xl flex items-center justify-center">
-              <Smartphone className="w-8 h-8 text-white" />
+              <Image
+                src="/logo.png"
+                alt="Buybites logo"
+                width={50}
+                height={50}
+                className="object-contain"
+              />
             </div>
-            <span className="text-3xl font-bold text-white">FoodHub</span>
+            <span className="text-3xl font-bold text-white">Buybites</span>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">
             Create Account
@@ -46,15 +50,14 @@ export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
             <div className="h-2 w-40 rounded-full bg-accent-orange"></div>
             <div className="h-2 w-40 rounded-full bg-accent-orange/40"></div>
           </div>
-          
+
           {globalError && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg">
               {globalError}
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Form fields */}
             <InputField
               label="Full Name"
               placeholder='Enter your Full Name'
@@ -94,7 +97,9 @@ export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
               endAdornment={
                 <Button
                   type="button"
+                  variant="ghost" 
                   onClick={() => setShowPassword(!showPassword)}
+                  className="text-accent-orange bg-transparent hover:bg-transparent"
                 >
                   {showPassword ? <EyeOff /> : <Eye />}
                 </Button>
@@ -115,9 +120,9 @@ export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
               endAdornment={
                 <Button
                   type="button"
-                  onClick={() =>
-                    setShowConfirmPassword(!showConfirmPassword)
-                  }
+                  variant="ghost"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="text-accent-orange bg-transparent hover:bg-transparent"
                 >
                   {showConfirmPassword ? <EyeOff /> : <Eye />}
                 </Button>
@@ -173,8 +178,8 @@ export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
             <p className="text-black/70">
               Already have an account?{' '}
               <Button
-                onClick={onSwitchToLogin}
-                className="text-accent-blue font-medium hover:text-hover-orange hover:underline"
+                onClick={() => router.push('/login')}
+                className="text-accent-orange font-medium bg-transparent hover:bg-transparent hover:underline"
               >
                 Sign In
               </Button>
@@ -188,7 +193,7 @@ export default function SignUpPage({ onSwitchToLogin }: SignUpProps) {
           email={values.email}
           onClose={() => {
             setters.setShowVerificationModal(false);
-            if (onSwitchToLogin) onSwitchToLogin();
+            router.push('/login');
           }}
         />
       )}

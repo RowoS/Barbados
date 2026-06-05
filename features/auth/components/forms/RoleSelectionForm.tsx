@@ -1,5 +1,5 @@
 "use client";
-import { Smartphone } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/shared/ui/button";
 import { useRoleSelection } from "@/features/auth/hooks/useRoleSelection";
 
@@ -14,12 +14,16 @@ export default function RoleSelectionForm() {
         <div className="w-full max-w-md">
             {/* Logo and Title */}
             <div className="text-center mb-8">
-                <div className="flex items-center justify-center gap-2 mb-4">
-                    <div className="w-14 h-14 bg-accent-blue rounded-2xl flex items-center justify-center">
-                        <Smartphone className="w-8 h-8 text-white" />
-                    </div>
-                    <span className="text-3xl font-bold text-white">FoodHub</span>
+                <div className="w-14 h-14 bg-accent-blue rounded-2xl flex items-center justify-center">
+                    <Image
+                        src="/logo.png"
+                        alt="Buybites logo"
+                        width={50}
+                        height={50}
+                        className="object-contain"
+                    />
                 </div>
+                <span className="text-3xl font-bold text-white">Buybites</span>
                 <h1 className="text-3xl font-bold text-white mb-2">
                     Create Account
                 </h1>

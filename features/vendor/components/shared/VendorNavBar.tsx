@@ -29,8 +29,8 @@ export default function VendorNavBar() {
               <Image
                 src="/logo.png"
                 alt="Buybites logo"
-                width={24}
-                height={24}
+                width={50}
+                height={50}
                 className="object-contain"
               />
             </div>
