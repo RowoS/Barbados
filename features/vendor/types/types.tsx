@@ -1,3 +1,4 @@
+import type { OrderItem } from "@/features/reviews/types/types";
 import {
   Home,
   Boxes,
@@ -54,3 +55,38 @@ export interface StoreSetupProps {
   onSkip?: () => void;
   userId: string;
 }
+
+export type StoreReview = {
+  review_id: string;
+  order_id: string;
+  rating: 1 | 2 | 3 | 4 | 5;
+  review: string | null;
+  created_at: string;
+  username: string;
+  avatar_url: string | null;
+};
+
+export type VendorOrder = {
+    order_id: string;
+    customer_id: string;
+    customer_name: string | null;
+    customer_avatar: string | null; 
+    status: string;
+    fulfillment: "pickup" | "delivery";
+    subtotal: number;
+    delivery_fee: number;
+    total: number;
+    notes: string | null;
+    delivery_landmark: string | null;
+    delivery_barangay: string | null;
+    delivery_city: string | null;
+    latitude: number;
+    longitude: number;
+    cancel_reason: string | null;
+    created_at: string;
+    confirmed_at: string | null;
+    cancelled_at: string | null;
+    completed_at: string | null;
+    payment_status: string;
+    items: OrderItem[];
+};
