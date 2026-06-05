@@ -1,40 +1,25 @@
 "use client";
 
+import Image from "next/image";
 import { useSearch } from "@/features/customers/hooks/useSearch";
-import { useState} from "react";
 import { useAllCarts } from "@/features/customers/hooks/useCartSection";
 import { CustomerOrdersSection } from "../order/components/CustomerOrderSection";
 import { CustomerChatList } from "../chat/components/CustomerChatList";
-import { useFavorites } from "./hooks/useFavorites";
 import { usePageTab } from "./hooks/usePageTabs";
 import CustomerNavBar from "./components/CustomerNavBar";
 import CartsView from "./components/CartView";
 import TabBar from "./components/TabBar";
 import StoreCard from "./components/storeCards";
 import SearchTab from "./components/SearchTab";
-import StoreMap from "./components/StoreMaps";
 
-export default function CustomerHomePage(){
+export default function CustomerHomePage() {
     const { activeTab, setActiveTab } = usePageTab();
-    const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const { favorites, toggleFavorite } = useFavorites();
-    const {cart_values, cart_functions} = useAllCarts(); 
-    const [hoveredStoreId, setHoveredStoreId] = useState<string | null>(null);
+    const { cart_values, cart_functions } = useAllCarts();
     const { values, functions } = useSearch();
-
-    const storeMarkers = values.stores
-        .filter(s => s.latitude && s.longitude)
-        .map(s => ({ id: s.id, name: s.store_name, lat: s.latitude!, lng: s.longitude! }));
-
-    const isMapHidden = isProfileOpen || isDropdownOpen;
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <CustomerNavBar 
-                onProfileOpenChange={setIsProfileOpen}
-                onDropdownOpenChange={setIsDropdownOpen}
-            />
+            <CustomerNavBar />
             <main className="max-w-7xl mx-auto px-4 py-6 md:px-6 pt-20">
                 <TabBar
                     activeTab={activeTab}
@@ -59,38 +44,49 @@ export default function CustomerHomePage(){
                 />
 
                 {activeTab === "shops" && (
-                    <div className="space-y-6">
-                        <div className="w-full">
-                            <StoreMap
-                                stores={storeMarkers}
-                                highlightedStoreId={hoveredStoreId}
-                                hidden={isMapHidden}
-                            />
+                    <div
+                        className="rounded-2xl p-6 mt-4"
+                        style={{ background: "#f5f0e8" }}
+                    >
+                        <div className="flex justify-start mb-4 text-sm text-gray-600">
+                            Store Results: {values.stores.length}
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {values.stores.map(store => (
-                                <StoreCard
-                                    key={store.id}
-                                    store={store}
-                                    isFavorite={favorites.includes(store.id)}
-                                    onToggleFavorite={toggleFavorite}
-                                    onHover={setHoveredStoreId}
-                                    onLeave={() => setHoveredStoreId(null)}
+                        {values.isLoadingStores ? (
+                            <div className="col-span-3 py-12 flex justify-center items-center">
+                                <div className="w-8 h-8 border-4 border-gray-300 border-t-primary rounded-full animate-spin" />
+                                <span className="ml-3 text-gray-500">Loading stores...</span>
+                            </div>
+                        ) : values.stores.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center py-12">
+                                <Image
+                                    src="/stores_no_found.png"
+                                    alt="No stores found"
+                                    width={200}
+                                    height={200}
+                                    className="opacity-80"
                                 />
-                            ))}
-                        </div>
+                                <p className="mt-4 text-gray-500 text-sm">
+                                    No stores match your criteria.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {values.stores.map(store => (
+                                    <StoreCard
+                                        key={store.id}
+                                        store={store}
+                                        onHover={() => {}}
+                                        onLeave={() => {}}
+                                    />
+                                ))}
+                            </div>
+                        )}
                     </div>
                 )}
 
-                {activeTab === "chats" && (
-                    <CustomerChatList />
-                )}
-
-                {activeTab === "delivery" && (
-                    <CustomerOrdersSection />
-                )}
-
+                {activeTab === "chats" && <CustomerChatList />}
+                {activeTab === "delivery" && <CustomerOrdersSection />}
                 {activeTab === "cart" && (
                     <CartsView
                         cartsByStore={cart_values.cartsByStore}

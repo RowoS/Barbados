@@ -1,7 +1,7 @@
-import VendorPage from "@/features/vendor/page";
+import VendorDashboardWrapper from "@/features/vendor/components/VendorDashboardWrapper";
 
 export default async function VendorRedirect() {
   return(
-    <VendorPage/>
+    <VendorDashboardWrapper />
   )
 }

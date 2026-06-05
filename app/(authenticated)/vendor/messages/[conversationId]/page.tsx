@@ -7,7 +7,7 @@ import { SidebarInset, SidebarProvider } from "@/shared/ui/sidebar";
 export default async function Page({ params }: { params: Promise<{ conversationId: string }> }) {
     return (
 
-        <main className="pt-25">
+        <main className="pt-25" style={{ background: "#f1f5f9" }}>
             <VendorChatPage params={params} />
         </main>
     )

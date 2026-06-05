@@ -1,20 +1,20 @@
 import VendorNavBar from "@/features/vendor/components/shared/VendorNavBar";
 import VendorSidebar from "@/features/vendor/components/shared/VendorSideBar";
+import VendorDashboard from "./VendorDashboard";
 import { SidebarProvider, SidebarInset } from "@/shared/ui/sidebar";
-import { VendorsOrdersPage} from "./VendorOrderPage";
+import { Package } from "lucide-react";
 
-export default function VendorOrdersWrapper() {
+export default function VendorDashboardWrapper() {
   return (
-    <SidebarProvider style={{ background: "#f1f5f9" }}>
+    <SidebarProvider>
       <VendorSidebar />
 
-      <SidebarInset style={{ background: "#f1f5f9" }}>
+      <SidebarInset>
         <VendorNavBar />
 
-        <main className="pt-25" style={{ marginRight: "8rem" }}>
-            <VendorsOrdersPage/>
+        <main className="pt-25">
+          <VendorDashboard />
         </main>
-
       </SidebarInset>
 
     </SidebarProvider>

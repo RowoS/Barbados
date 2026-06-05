@@ -50,14 +50,33 @@
             price?: number;
             image?: string;
             is_available?: boolean;
+            category_id?: string;
         }) => {
             await run(async () => {
                 const updated = await updateMenuItem(itemId, updates);
-                setCategories(prev => prev.map(cat =>
-                    cat.id === categoryId
-                        ? { ...cat, items: (cat.items ?? []).map(i => i.id === itemId ? { ...i, ...updated } : i) }
-                        : cat
-                ));
+                const newCategoryId = updates.category_id;
+
+                if (newCategoryId && newCategoryId !== categoryId) {
+                    setCategories(prev => {
+                        const item = prev
+                            .find(c => c.id === categoryId)
+                            ?.items?.find(i => i.id === itemId);
+                        if (!item) return prev;
+                        return prev.map(cat => {
+                            if (cat.id === categoryId)
+                                return { ...cat, items: (cat.items ?? []).filter(i => i.id !== itemId) };
+                            if (cat.id === newCategoryId)
+                                return { ...cat, items: [...(cat.items ?? []), { ...item, ...updated }] };
+                            return cat;
+                        });
+                    });
+                } else {
+                    setCategories(prev => prev.map(cat =>
+                        cat.id === categoryId
+                            ? { ...cat, items: (cat.items ?? []).map(i => i.id === itemId ? { ...i, ...updated } : i) }
+                            : cat
+                    ));
+                }
             });
         };
 

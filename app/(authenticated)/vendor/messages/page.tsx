@@ -5,10 +5,10 @@ import { SidebarInset, SidebarProvider } from "@/shared/ui/sidebar";
 
 export default function VendorMessagesPage() {
     return (
-        <SidebarProvider>
+        <SidebarProvider style={{ background: "#f1f5f9" }}>
             <VendorSidebar />
 
-            <SidebarInset>
+            <SidebarInset style={{ background: "#f1f5f9" }}>
                 <VendorNavBar />
                 <main className="pt-25">
                     <VendorChatList />

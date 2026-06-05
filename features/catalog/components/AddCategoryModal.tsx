@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
-
-interface AddCategoryModalProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    onSubmit: (name: string) => Promise<void>;
-    isLoading: boolean;
-}
+import {AddCategoryModalProps} from "../types/types";
 
 export default function AddCategoryModal({ open, onOpenChange, onSubmit, isLoading }: AddCategoryModalProps) {
     const [name, setName] = useState("");

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { Label } from "@/shared/ui/label";
@@ -8,7 +9,7 @@ import { InputField } from "@/shared/components/InputField";
 import { LoginFormProps } from "@/shared/types";
 import GoogleButton from "@/features/auth/components/shared/GoogleSignInButton";
 import { useLoginForm } from "@/features/auth/hooks/useLoginForm";
-import { Mail, Lock, Eye, EyeOff, Smartphone } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import EmailVerificationModal from "../modals/EmailConfirmationModal";
 import EmailVerifiedModal from "../modals/EmailVerifiedModal";
 import TOTPForm from "../modals/TOTPModal";
@@ -55,9 +56,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({ className, ...props }) => 
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
               <div className="w-14 h-14 bg-accent-blue rounded-2xl flex items-center justify-center">
-                <Smartphone className="w-8 h-8 text-white" />
+                <Image
+                  src="/logo.png"
+                  alt="Buybites logo"
+                  width={50}
+                  height={50}
+                  className="object-contain"
+                />
               </div>
-              <span className="text-3xl font-bold text-white">FoodHub</span>
+              <span className="text-3xl font-bold text-white">Buybites</span>
             </div>
             <h1 className="text-3xl font-bold text-white/100 mb-2">
               Welcome Back

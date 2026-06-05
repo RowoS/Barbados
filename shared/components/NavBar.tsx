@@ -1,7 +1,7 @@
 "use client";
 import { ShoppingCart, User, UtensilsCrossed } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
+import Image from 'next/image';   // ✅ add this import
 
 export default function NavBar() {
   const router = useRouter();
@@ -12,7 +12,13 @@ export default function NavBar() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-[var(--accent-blue)] rounded-lg flex items-center justify-center">
-              <UtensilsCrossed className="w-6 h-6 text-white" />
+              <Image
+                src="/logo.png"
+                alt="Buybites logo"
+                width={50}
+                height={50}
+                className="object-contain"
+              />
             </div>
             <span className="text-xl font-bold text-white">Buybites</span>
           </div>

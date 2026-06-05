@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { getBarangays, getStoresInBarangay, searchStoresByName} from "../libs/search-actions";
-import { Barangay, StoreResult, barangayCache} from "../types/types";
+import { useState, useEffect, useCallback } from "react";
+import { getBarangays, getRandomStores, getStoresInBarangay, searchStoresByName } from "../libs/search-actions";
+import { Barangay, StoreResult, barangayCache } from "../types/types";
 
 export function useSearch() {
     const [searchMode, setSearchMode] = useState<"barangay" | "text">("barangay");
@@ -13,6 +13,25 @@ export function useSearch() {
     const [isLoadingBarangays, setIsLoadingBarangays] = useState(false);
     const [isLoadingStores, setIsLoadingStores] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Shared store loader
+    const loadStores = useCallback(async (fetcher: () => Promise<StoreResult[]>) => {
+        setStores([]);
+        setIsLoadingStores(true);
+        setError(null);
+        try {
+            const results = await fetcher();
+            setStores(results);
+        } catch {
+            setError("Failed to load stores");
+        } finally {
+            setIsLoadingStores(false);
+        }
+    }, []);
+
+    const loadRandomStores = useCallback(() => {
+        loadStores(getRandomStores);
+    }, [loadStores]);
 
     useEffect(() => {
         if (barangayCache.data) {
@@ -29,40 +48,24 @@ export function useSearch() {
             .finally(() => setIsLoadingBarangays(false));
     }, []);
 
-    const handleSelectBarangay = async (barangay: Barangay) => {
+    useEffect(() => {
+        loadRandomStores();
+    }, []);
+
+    const handleSelectBarangay = (barangay: Barangay) => {
         setSelectedBarangay(barangay);
-        setStores([]);
-        setIsLoadingStores(true);
-        setError(null);
-        try {
-            const results = await getStoresInBarangay(barangay.id);
-            setStores(results);
-        } catch {
-            setError("Failed to load stores");
-        } finally {
-            setIsLoadingStores(false);
-        }
+        loadStores(() => getStoresInBarangay(barangay.id));
     };
 
-    const handleTextSearch = async () => {
+    const handleTextSearch = () => {
         if (!textQuery.trim()) return;
-        setStores([]);
-        setIsLoadingStores(true);
-        setError(null);
-        try {
-            const results = await searchStoresByName(textQuery.trim());
-            setStores(results);
-        } catch {
-            setError("Failed to search stores");
-        } finally {
-            setIsLoadingStores(false);
-        }
+        loadStores(() => searchStoresByName(textQuery.trim()));
     };
 
     const handleClearSelection = () => {
         setSelectedBarangay(null);
         setTextQuery("");
-        setStores([]);
+        loadRandomStores();
     };
 
     const handleModeSwitch = (mode: "barangay" | "text") => {
@@ -71,8 +74,7 @@ export function useSearch() {
     };
 
     return {
-        values: {searchMode,textQuery, barangays, selectedBarangay, stores, isLoadingBarangays, isLoadingStores, error},
+        values: { searchMode, textQuery, barangays, selectedBarangay, stores, isLoadingBarangays, isLoadingStores, error },
         functions: { handleSelectBarangay, handleClearSelection, handleTextSearch, handleModeSwitch, setTextQuery },
     };
 }
-

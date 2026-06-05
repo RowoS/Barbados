@@ -3,7 +3,7 @@
 import { Button } from "@/shared/ui/button";
 import { InputField } from "@/shared/components/InputField";
 import { useUpdatePasswordForm } from "@/features/auth/hooks/useUpdatePassForm";
-import { Smartphone } from "lucide-react";
+import Image from "next/image";
 
 export default function UpdatePasswordForm() {
   const {
@@ -24,7 +24,13 @@ export default function UpdatePasswordForm() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-14 h-14 bg-gradient-to-br from-[#216869] to-[#49A078] rounded-2xl flex items-center justify-center">
-              <Smartphone className="w-8 h-8 text-white" />
+              <Image
+                src="/logo.png"
+                alt="Buybites logo"
+                width={50}
+                height={50}
+                className="object-contain"
+              />
             </div>
             <span className="text-3xl font-bold text-[#1F2421]">Buybites</span>
           </div>

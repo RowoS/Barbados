@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';   // ✅ add this import
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,15 +12,13 @@ import { User, UtensilsCrossed, LogOut } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import CustomerProfileOverlay from "@/features/profiles/components/overlays/CustomerProfileModal"
 import { useCustomerNavBar } from "../hooks/CustomerNavBarLogic";
-import { CustomerNavBarProps } from "../types/types";
 import { NotificationsDropdown } from "@/features/notifications/components/NotificationButton";
 
-export default function CustomerNavBar({ onProfileOpenChange, onDropdownOpenChange }: CustomerNavBarProps) {
+export default function CustomerNavBar() {
   const { handleLogout, openProfile, setOpenProfile, isLoading} = useCustomerNavBar();
 
    const handleSetOpenProfile = (value: boolean) => {
         setOpenProfile(value);
-        onProfileOpenChange?.(value);
     };
 
   return (
@@ -28,8 +27,15 @@ export default function CustomerNavBar({ onProfileOpenChange, onDropdownOpenChan
         <div className="flex items-center justify-between h-16">
 
           <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Replace icon with logo image */}
             <div className="w-10 h-10 bg-[var(--accent-blue)] rounded-lg flex items-center justify-center">
-              <UtensilsCrossed className="w-6 h-6 text-white" />
+              <Image
+                src="/logo.png"
+                alt="Buybites logo"
+                width={50}
+                height={50}
+                className="object-contain"
+              />
             </div>
             <span className="text-xl font-bold text-white">
               Buybites
@@ -37,9 +43,9 @@ export default function CustomerNavBar({ onProfileOpenChange, onDropdownOpenChan
           </div>
 
           <div className="flex items-center gap-2 md:gap-3">
-            <NotificationsDropdown onOpenChange={onDropdownOpenChange} />
+            <NotificationsDropdown />
             
-            <DropdownMenu onOpenChange={onDropdownOpenChange}>
+            <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="flex items-center gap-2 bg-accent-orange hover:bg-hover-orange text-white px-4 md:px-5 py-2 rounded-lg">
                   <User className="w-4 h-4" />

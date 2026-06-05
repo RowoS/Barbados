@@ -34,6 +34,7 @@ export interface ChatWindowProps {
     conversationId: string;
     currentUserId: string;
     storeName?: string;
+    backUrl?: string;
 }
 
 export type VendorConversation = {
