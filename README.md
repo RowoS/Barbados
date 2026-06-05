@@ -1,10 +1,10 @@
 ## Barbados
 *Food Ordering Platform built for residents of Baybay City*
 
-|        Internal Release Code          |    Date Released         |
+| Internal Release Code | Date Released |
 | ---------------- | ---------- |
-|  BS.010.001     |     2026-02-27     |
-|  BS.010.002     |     2026-03-19   |
+| BS.010.001 | 2026-02-27 |
+| BS.010.002 | 2026-03-19 |
 | BS.010.003 | 2026-03-19 |
 | BS.010.004 | 2026-04-18 |
 | BS.010.005 | 2026-04-20 |
@@ -12,6 +12,14 @@
 | BS.010.007 | 2026-05-05 |
 | BS.010.008 | 2026-05-23 |
 | BS.010.009 | 2026-05-28 |
+| BS.010.010 | 2026-06-05 |
+
+## BS.010.010 Release Notes
+  **Refactors and UI Updates**
+  * Updated vendor dashboard to include analytics
+  * Updated page layout and color scheme for customer and vendor pages
+  * Modified routing in certain pages
+  * Replaced placeholder logo with project logo
 
 ## BS.010.009 Release Notes
   **Admin Features and Reporting**
