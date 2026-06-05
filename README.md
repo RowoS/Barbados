@@ -1,36 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Barbados
+*Food Ordering Platform built for residents of Baybay City*
 
-## Getting Started
+| Internal Release Code | Date Released |
+| ---------------- | ---------- |
+| BS.010.001 | 2026-02-27 |
+| BS.010.002 | 2026-03-19 |
+| BS.010.003 | 2026-03-19 |
+| BS.010.004 | 2026-04-18 |
+| BS.010.005 | 2026-04-20 |
+| BS.010.006 | 2026-04-28 |
+| BS.010.007 | 2026-05-05 |
+| BS.010.008 | 2026-05-23 |
+| BS.010.009 | 2026-05-28 |
+| BS.010.010 | 2026-06-05 |
 
-First, run the development server:
+## BS.010.010 Release Notes
+  **Refactors and UI Updates**
+  * Updated vendor dashboard to include analytics
+  * Updated page layout and color scheme for customer and vendor pages
+  * Modified routing in certain pages
+  * Replaced placeholder logo with project logo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## BS.010.009 Release Notes
+  **Admin Features and Reporting**
+  * Created an admin role for store monitoring with respective dashboard
+  * Added reporting features for customers to report certain behavior from vendors
+  
+  **Other Updates**
+  * Fixed and updated middleware routing for customers and vendors
+  * Removed unused components 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## BS.010.008 Release Notes
+  **Chat System**
+  * Implemented a chat system feature for customers to contact vendors
+  * Added chatlist to customer homepage
+  
+  **Notifications** 
+  * Implemented notifications for customers and vendors; notify users with regards to order status
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## BS.010.007 Release Notes
+ **Review and Ratings**
+ * Added Review Modal for completed orders to leave reviews on stores
+ * Added Reviews Page for the vendor-side
+ * Modify Store Card to display the store's rating
+ * Added Store Review Section when viewing stores
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## BS.010.006 Release Notes
+  **Order Page - Customer Side**
+  * Added functionality for viewing orders made
+  * Implemented cancellation and completion functionality for orders 
+  * Added "Order History" for viewing completed or cancelled orders
+  
+  **Order Page - Vendor Side**
+  * Enable vendors to see all incoming orders placed by customers
+  * Allow vendors to decline or process placed orders
+  * Implemented "Order History" for the vendor-side
+  * Allow for viewing Delivery Location and Providing Directions 
+  
+  ***Other Updates***
+  * Added Checkout Modal for checking out orders (currently only accepts Cash on Delivery)
+  * Deleting items or Updating Item Quantities now available in the Cart Tab
+  * Updated functions and types for the checkout modal
 
-## Learn More
+## BS.010.005 Release Notes
 
-To learn more about Next.js, take a look at the following resources:
+  **Store Page - Customer View**
+  * Added store page view for customers to browse products from stores
+  * Added "Cart" component, allowing customers to add products from the store to a cart
+  
+  **Customer Homepage**
+  * Added the "Store Search" functionality to the homepage
+  * Added a "Store Catalog" component to homepage for displaying results of store search
+  * Added a "Cart View" to homepage to allow customers to view products added from a store
+  * Added "Map View" for viewing store locations
+  * Implemented and added Navbar component to the homepage
+  
+  ***Other Updates***
+  * Updated store setup to include choices for delivery method
+  * Allow vendors to update business hours and mode of delivery
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## BS.010.004 Release Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+  **Store Search Functionality**
+  * Added the search function for customers to search for vendor stores
+  
+  **Catalog Page for Vendors**
+  * Added catalog page wherein vendors can add products to their store
+  * Implemented edit functionality for products
+  
+  ***Other Updates***
+  * Updated routing logic and imports
+  * Updated map overlay to work for Profile changes
+  * Added two-factor authentication (2FA) to Login Form
 
-## Deploy on Vercel
+## BS.010.003 Release Notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* refactor: Update Middleware
+* feat: Server-Side rendering for Store Set-up Page and Dashboard
+* feat: Add initial dashboard page for vendors
+* feat: Add Initial Set-up Page for Store Creation
+* feat: Add new UI components for vendor components
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## BS.010.002 Release Notes
+* feat: Add Location Marking feature on Leaflet Map and Packages
+* feat: Implement Leaflet Map
+* revert: remove changes from components and updates
+* refactor: Folder restructuring 
+
+
+## BS.010.001 Release Notes
+
+* refactor: Update Middleware
+* feat: Add Email Verified Modal
+* refactor: Update Middleware and Forms for Role-based Authentication
+* refactor: Update UI for Authentication Forms and Landing Page
+* feat: Add Functionality to Reset & Update Password Form
+* feat: Add Google Auth and redirects
+* feat: Add Update Password Form for Password Reset
+* feat: Add Sign Up Hook and Update Login Functionality
+* fix: Login Page UI and imports
+* feat: Add Supabase Client
+* feat:Add Login and Sign Up Forms
+* feat: Add UI for Landing Page
+* Create Initial Next JS Project
+* Initial commit
+
+Important Links
+* Design Specs: [Barbados Docportal](https://github.com/RowoS/Barbados-docportal)
