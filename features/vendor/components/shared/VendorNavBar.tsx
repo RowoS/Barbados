@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';   // ✅ add this import
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,8 +24,15 @@ export default function VendorNavBar() {
 
           {/* Logo */}
           <div className="flex items-center gap-2">
+            {/* Replace icon with logo image */}
             <div className="w-10 h-10 bg-[var(--accent-blue)] rounded-lg flex items-center justify-center">
-              <UtensilsCrossed className="w-6 h-6 text-white" />
+              <Image
+                src="/logo.png"
+                alt="Buybites logo"
+                width={24}
+                height={24}
+                className="object-contain"
+              />
             </div>
             <span className="text-xl font-bold text-white">
               Buybites
