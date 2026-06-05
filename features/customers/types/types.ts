@@ -44,8 +44,6 @@ export type SearchTabProps = {
 
 export type StoreCardProps = {
     store: StoreResult;
-    isFavorite: boolean;
-    onToggleFavorite: (id: string) => void;
     onHover: (id: string) => void;
     onLeave: () => void;
 };
@@ -56,11 +54,6 @@ export type CartsViewProps = {
     totalItems: number;
     onUpdateQty: (cartItemId: string, cartId: string, qty: number) => void;
     onRemoveItem: (cartItemId: string, cartId: string) => void;
-};
-
-export type CustomerNavBarProps = {
-    onProfileOpenChange?: (value: boolean) => void;
-    onDropdownOpenChange?: (value: boolean) => void;
 };
 
 export type CartByStore = {

@@ -11,15 +11,13 @@ import { User, UtensilsCrossed, LogOut } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import CustomerProfileOverlay from "@/features/profiles/components/overlays/CustomerProfileModal"
 import { useCustomerNavBar } from "../hooks/CustomerNavBarLogic";
-import { CustomerNavBarProps } from "../types/types";
 import { NotificationsDropdown } from "@/features/notifications/components/NotificationButton";
 
-export default function CustomerNavBar({ onProfileOpenChange, onDropdownOpenChange }: CustomerNavBarProps) {
+export default function CustomerNavBar() {
   const { handleLogout, openProfile, setOpenProfile, isLoading} = useCustomerNavBar();
 
    const handleSetOpenProfile = (value: boolean) => {
         setOpenProfile(value);
-        onProfileOpenChange?.(value);
     };
 
   return (
@@ -37,9 +35,9 @@ export default function CustomerNavBar({ onProfileOpenChange, onDropdownOpenChan
           </div>
 
           <div className="flex items-center gap-2 md:gap-3">
-            <NotificationsDropdown onOpenChange={onDropdownOpenChange} />
+            <NotificationsDropdown />
             
-            <DropdownMenu onOpenChange={onDropdownOpenChange}>
+            <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="flex items-center gap-2 bg-accent-orange hover:bg-hover-orange text-white px-4 md:px-5 py-2 rounded-lg">
                   <User className="w-4 h-4" />

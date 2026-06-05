@@ -36,3 +36,13 @@ export async function searchStoresByName(query: string): Promise<StoreResult[]> 
         average_rating: store.average_rating ? Number(store.average_rating) : null,
     })) as StoreResult[];
 }
+
+export async function getRandomStores(): Promise<StoreResult[]> {
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("get_random_stores", { limit_count: 12 });
+    if (error) throw error;
+    return (data || []).map((store: StoreResult) => ({
+        ...store,
+        average_rating: store.average_rating ? Number(store.average_rating) : null,
+    }));
+}
